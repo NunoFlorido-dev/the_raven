@@ -18,9 +18,27 @@ function preloadFont() {
 
 //function to load arrows
 function preloadArrows(center) {
-  arrowL = new Arrow(center - 100, height - 118, 48, color(255, 0, 0));
-  arrowUP = new Arrow(center, height - 118, 48, color(0, 255, 0));
-  arrowR = new Arrow(center + 100, height - 118, 48, color(0, 0, 255));
+  arrowL = new Arrow(
+    center - 100,
+    height - 118,
+    48,
+    color(255, 0, 0),
+    color(200, 0, 0)
+  );
+  arrowUP = new Arrow(
+    center,
+    height - 118,
+    48,
+    color(0, 255, 0),
+    color(0, 200, 0)
+  );
+  arrowR = new Arrow(
+    center + 100,
+    height - 118,
+    48,
+    color(0, 0, 255),
+    color(0, 0, 200)
+  );
 
   arrows = [arrowL, arrowUP, arrowR];
 }
@@ -54,5 +72,31 @@ function draw() {
 
   for (let i = 0; i < arrows.length; i++) {
     arrows[i].display();
+  }
+}
+
+//add key input interaction
+function keyPressed() {
+  if (key === "A" || key === "a") {
+    arrowL.setPressed(false);
+  }
+  if (key === "W" || key === "w") {
+    arrowUP.setPressed(false);
+  }
+  if (key === "D" || key === "d") {
+    arrowR.setPressed(false);
+  }
+}
+
+//same interaction
+function keyReleased() {
+  if (key === "A" || key === "a") {
+    arrowL.setPressed(true);
+  }
+  if (key === "W" || key === "w") {
+    arrowUP.setPressed(true);
+  }
+  if (key === "D" || key === "d") {
+    arrowR.setPressed(true);
   }
 }
