@@ -1,11 +1,6 @@
-@font-face {
-    font-family: "TheRaven-Regular";
-    src: url("../assets/font/TheRaven-Regular.ttf") format("truetype");
-  }
-  
-  * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
-  
+@font-face{
+  font-family: "TheRaven-Regular";
+  src: url("../assets/font/TheRaven-Regular.woff");
+}
+
+* {padding: 0; margin: 0; box-sizing: border-box;}
