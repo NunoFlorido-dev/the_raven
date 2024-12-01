@@ -121,6 +121,7 @@ function draw() {
   }
 }
 
+//function to handle interaction
 function handleInteraction(centerX, arrow) {
   for (let i = pointers.length - 1; i >= 0; i--) {
     if (pointers[i].x === centerX && pointers[i].intersect(arrow.x, arrow.y)) {
@@ -149,7 +150,7 @@ function keyPressed() {
   }
 }
 
-//same interaction
+//same interaction but when the key is released
 function keyReleased() {
   if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
   if (keyCode === UP_ARROW) arrowUP.setPressed(true);
