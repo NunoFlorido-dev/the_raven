@@ -11,6 +11,8 @@ let subtitleX;
 let subtitleY;
 let subtitleSize;
 
+let marginBotY;
+
 //function to load font
 function preloadFont() {
   font = loadFont("../assets/font/TheRaven-Regular.ttf");
@@ -20,21 +22,21 @@ function preloadFont() {
 function preloadArrows(center) {
   arrowL = new Arrow(
     center - 100,
-    height - 118,
+    marginBotY,
     48,
     color(255, 0, 0),
     color(200, 0, 0)
   );
   arrowUP = new Arrow(
     center,
-    height - 118,
+    marginBotY,
     48,
     color(0, 255, 0),
     color(0, 200, 0)
   );
   arrowR = new Arrow(
     center + 100,
-    height - 118,
+    marginBotY,
     48,
     color(0, 0, 255),
     color(0, 0, 200)
@@ -43,7 +45,7 @@ function preloadArrows(center) {
   arrows = [arrowL, arrowUP, arrowR];
 }
 
-//create arraylist with pointers
+//create array with pointers
 let pointers = [];
 
 //test function to preload pointers
@@ -75,6 +77,7 @@ function preloadPointers(center) {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  marginBotY = height - 118; //place for arrows
   preloadFont(); //preload font
   preloadArrows((width / 4) * 3); //preload arrows
   preloadPointers((width / 4) * 3); //preload pointers
@@ -106,6 +109,11 @@ function draw() {
     } else {
       pointers[i].move();
       pointers[i].display();
+      if (pointers[i].y >= marginBotY) {
+        if (pointers.length >= 0) {
+          pointers.splice(i, 1);
+        }
+      }
     }
   }
 
