@@ -75,6 +75,10 @@ function preloadPointers(center) {
   }
 }
 
+function preload() {
+  loadMusic();
+}
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   marginBotY = height - 118; //place for arrows
@@ -147,6 +151,10 @@ function keyPressed() {
   if (keyCode === RIGHT_ARROW && arrowR.isPressed) {
     arrowR.setPressed(false);
     handleInteraction(centerR, arrowR);
+  }
+
+  if (key === " ") {
+    playMusic();
   }
 }
 
