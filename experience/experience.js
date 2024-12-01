@@ -121,60 +121,37 @@ function draw() {
   }
 }
 
+function handleInteraction(centerX, arrow) {
+  for (let i = pointers.length - 1; i >= 0; i--) {
+    if (pointers[i].x === centerX && pointers[i].intersect(arrow.x, arrow.y)) {
+      pointers[i].interact(arrow.x, arrow.y);
+    }
+  }
+}
+
 //add key input interaction
 function keyPressed() {
   let center = (width / 4) * 3;
   let centerL = center - 100;
-  let centerR = center + 100; //center of arrows
+  let centerR = center + 100;
 
-  if (keyCode === LEFT_ARROW) {
-    arrowL.setPressed(false); //set
-
-    for (let i = pointers.length - 1; i >= 0; i--) {
-      // Check for interaction with each arrow
-      for (let j = 0; j < arrows.length; j++) {
-        if (pointers[i].x == centerL) {
-          pointers[i].interact(arrows[j].x, arrows[j].y);
-        }
-      }
-    }
+  if (keyCode === LEFT_ARROW && arrowL.isPressed) {
+    arrowL.setPressed(false);
+    handleInteraction(centerL, arrowL);
   }
-  if (keyCode === UP_ARROW) {
+  if (keyCode === UP_ARROW && arrowUP.isPressed) {
     arrowUP.setPressed(false);
-
-    for (let i = pointers.length - 1; i >= 0; i--) {
-      // Check for interaction with each arrow
-      for (let j = 0; j < arrows.length; j++) {
-        if (pointers[i].x == center) {
-          pointers[i].interact(arrows[j].x, arrows[j].y);
-        }
-      }
-    }
+    handleInteraction(center, arrowUP);
   }
-
-  if (keyCode === RIGHT_ARROW) {
+  if (keyCode === RIGHT_ARROW && arrowR.isPressed) {
     arrowR.setPressed(false);
-
-    for (let i = pointers.length - 1; i >= 0; i--) {
-      // Check for interaction with each arrow
-      for (let j = 0; j < arrows.length; j++) {
-        if (pointers[i].x == centerR) {
-          pointers[i].interact(arrows[j].x, arrows[j].y);
-        }
-      }
-    }
+    handleInteraction(centerR, arrowR);
   }
 }
 
 //same interaction
 function keyReleased() {
-  if (keyCode === LEFT_ARROW) {
-    arrowL.setPressed(true);
-  }
-  if (keyCode === UP_ARROW) {
-    arrowUP.setPressed(true);
-  }
-  if (keyCode === RIGHT_ARROW) {
-    arrowR.setPressed(true);
-  }
+  if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
+  if (keyCode === UP_ARROW) arrowUP.setPressed(true);
+  if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
 }
