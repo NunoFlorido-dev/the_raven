@@ -98,27 +98,26 @@ function displaySubtitle(subtitle) {
 function draw() {
   background(220);
 
-  subtitleX = width / 4;
-  subtitleY = height - 100;
-  displaySubtitle("BAZA AAC");
+  subtitleX = width / 4; //x of subtitle
+  subtitleY = height - 100; //y of subtitle
+  displaySubtitle("BAZA AAC"); //add subtitle to canvas
 
   for (let i = pointers.length - 1; i >= 0; i--) {
-    // Remove pointer if it dies
     if (pointers[i].die()) {
-      pointers.splice(i, 1);
+      pointers.splice(i, 1); // Remove pointer if it is pressed on
     } else {
-      pointers[i].move();
-      pointers[i].display();
-      if (pointers[i].y >= marginBotY) {
+      pointers[i].move(); //move pointer
+      pointers[i].display(); //display pointer
+      if (pointers[i].y >= height) {
         if (pointers.length >= 0) {
-          pointers.splice(i, 1);
+          pointers.splice(i, 1); //if the pointer exceeds the margin and isn't pressed, delete it
         }
       }
     }
   }
 
   for (let i = 0; i < arrows.length; i++) {
-    arrows[i].display();
+    arrows[i].display(); //display arrows
   }
 }
 
@@ -126,10 +125,10 @@ function draw() {
 function keyPressed() {
   let center = (width / 4) * 3;
   let centerL = center - 100;
-  let centerR = center + 100;
+  let centerR = center + 100; //center of arrows
 
   if (keyCode === LEFT_ARROW) {
-    arrowL.setPressed(false);
+    arrowL.setPressed(false); //set
 
     for (let i = pointers.length - 1; i >= 0; i--) {
       // Check for interaction with each arrow
