@@ -1,4 +1,6 @@
 let font; //load font
+let poem; //load poem
+let poem_paragraphs; //array for poem paragraphs
 
 //create arrows
 let arrowL;
@@ -12,6 +14,10 @@ let subtitleY;
 let subtitleSize;
 
 let marginBotY;
+
+function loadPoem() {
+  poem = loadStrings("../assets/poem_file/theraven_formatted.txt");
+}
 
 //function to load font
 function preloadFont() {
@@ -77,6 +83,7 @@ function preloadPointers(center) {
 
 function preload() {
   loadMusic();
+  loadPoem();
 }
 
 function setup() {
@@ -89,6 +96,15 @@ function setup() {
   //text
   subtitleSize = 48;
   textAlign(CENTER);
+
+  //poem file related
+  let fullText = poem.join("\n");
+
+  poem_paragraphs = split(fullText, "\n\n");
+
+  for (let i = 0; i < poem_paragraphs.length; i++) {
+    print(poem_paragraphs[i]);
+  }
 }
 
 //function to display subtitles (receives string as input)
