@@ -1,7 +1,7 @@
 let song;
 
 function loadMusic() {
-  song = loadSound("../assets/music/kokiri_forest.mp3");
+  song = loadSound("../assets/music/sound.mp3");
 }
 
 function playMusic() {
