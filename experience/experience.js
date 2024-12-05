@@ -15,7 +15,7 @@ let pointers = [];
 let switcher = false; // Trigger for beat detection (updated by detectBeat)
 
 function preloadFont() {
-  font = loadFont("/Users/clc/Documents/GitHub/the_raven/assets/font/TheRaven-Regular.woff");
+  font = loadFont("../assets/font/TheRaven-Regular.ttf");
 }
 
 function preloadPointers(center, y) {
@@ -39,15 +39,40 @@ function preloadPointers(center, y) {
 }
 
 function preloadArrows(center) {
-  arrowL = new Arrow(center - 100, marginBotY, 48, color(255, 0, 0), color(200, 0, 0));
-  arrowUP = new Arrow(center, marginBotY, 48, color(0, 255, 0), color(0, 200, 0));
-  arrowR = new Arrow(center + 100, marginBotY, 48, color(0, 0, 255), color(0, 0, 200));
+  arrowL = new Arrow(
+    center - 100,
+    marginBotY,
+    48,
+    color(255, 0, 0),
+    color(200, 0, 0)
+  );
+  arrowUP = new Arrow(
+    center,
+    marginBotY,
+    48,
+    color(0, 255, 0),
+    color(0, 200, 0)
+  );
+  arrowR = new Arrow(
+    center + 100,
+    marginBotY,
+    48,
+    color(0, 0, 255),
+    color(0, 0, 200)
+  );
   arrows = [arrowL, arrowUP, arrowR];
 }
 
 function preload() {
   preloadFont();
   loadMusic(); // Load the music from soundtest.js
+}
+
+function displaySubtitle(subtitle) {
+  fill(0);
+  textFont(font);
+  textSize(subtitleSize);
+  text(subtitle, subtitleX, subtitleY);
 }
 
 function setup() {
@@ -94,13 +119,6 @@ function draw() {
   if (switcher) {
     spawnPointer();
   }
-}
-
-function displaySubtitle(subtitle) {
-  fill(0);
-  textFont(font);
-  textSize(subtitleSize);
-  text(subtitle, subtitleX, subtitleY);
 }
 
 function handleInteraction(centerX, arrow) {
@@ -154,7 +172,7 @@ function spawnPointer() {
 }
 
 function mousePressed() {
-  if (getAudioContext().state !== 'running') {
+  if (getAudioContext().state !== "running") {
     getAudioContext().resume(); // Resume the AudioContext
   }
   playMusic(); // Start playing music on user gesture

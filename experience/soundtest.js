@@ -1,11 +1,7 @@
 let song;
 
-function preload() {
-  song = loadSound("../assets/music/sound.mp3");
-}
-
 function loadMusic() {
-  // This function is no longer needed for loading the song.
+  song = loadSound("../assets/music/sound.mp3");
 }
 
 function playMusic() {
@@ -23,10 +19,9 @@ function detectBeat(switcher) {
   playMusic();
   fft = new p5.FFT();
   let bass = fft.getEnergy("bass");
-  if(bass > treshold) {
+  if (bass > treshold) {
     switcher = true;
-  }
-  else {
+  } else {
     switcher = false;
   }
 }
