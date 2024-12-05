@@ -1,97 +1,101 @@
-let font; //load font
+let font;
 
-//create arrows
-let arrowL;
-let arrowUP;
-let arrowR;
-let arrows = []; //create arrow array
+// Arrows
+let arrowL, arrowUP, arrowR;
+let arrows = [];
 
-//text variables
-let subtitleX;
-let subtitleY;
-let subtitleSize;
-
+// Text variables
+let subtitleX, subtitleY, subtitleSize;
 let marginBotY;
 
-//function to load font
-function preloadFont() {
-  font = loadFont("../assets/font/TheRaven-Regular.ttf");
-}
-
-//function to load arrows
-function preloadArrows(center) {
-  arrowL = new Arrow(
-    center - 100,
-    marginBotY,
-    48,
-    color(255, 0, 0),
-    color(200, 0, 0)
-  );
-  arrowUP = new Arrow(
-    center,
-    marginBotY,
-    48,
-    color(0, 255, 0),
-    color(0, 200, 0)
-  );
-  arrowR = new Arrow(
-    center + 100,
-    marginBotY,
-    48,
-    color(0, 0, 255),
-    color(0, 0, 200)
-  );
-
-  arrows = [arrowL, arrowUP, arrowR];
-}
-
-//create array with pointers
+// Pointers
 let pointers = [];
 
-//test function to preload pointers
-function preloadPointers(center) {
-  let posX = [];
-  posX[0] = center - 100;
-  posX[1] = center;
-  posX[2] = center + 100;
+// Beat detection
+let switcher = false; // Trigger for beat detection (updated by detectBeat)
+
+function preloadFont() {
+  font = loadFont("/Users/clc/Documents/GitHub/the_raven/assets/font/TheRaven-Regular.woff");
+}
+
+function preloadPointers(center, y) {
+  let posX = [center - 100, center, center + 100];
 
   for (let i = 0; i < 10; i++) {
     let type = int(random(0, 3));
     let randomPos = posX[type];
     let colorP;
 
-    let x = randomPos;
-    let y = int(random(-500, 300));
-
-    if (type == 0) {
+    if (type === 0) {
       colorP = color(255, 0, 0);
-    } else if (type == 1) {
+    } else if (type === 1) {
       colorP = color(0, 255, 0);
-    } else if (type == 2) {
+    } else if (type === 2) {
       colorP = color(0, 0, 255);
     }
 
-    pointers.push(new Pointer(x, y, 48, colorP));
+    pointers.push(new Pointer(randomPos, y, 48, colorP));
   }
 }
 
+function preloadArrows(center) {
+  arrowL = new Arrow(center - 100, marginBotY, 48, color(255, 0, 0), color(200, 0, 0));
+  arrowUP = new Arrow(center, marginBotY, 48, color(0, 255, 0), color(0, 200, 0));
+  arrowR = new Arrow(center + 100, marginBotY, 48, color(0, 0, 255), color(0, 0, 200));
+  arrows = [arrowL, arrowUP, arrowR];
+}
+
 function preload() {
-  loadMusic();
+  preloadFont();
+  loadMusic(); // Load the music from soundtest.js
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  marginBotY = height - 118; //place for arrows
-  preloadFont(); //preload font
-  preloadArrows((width / 4) * 3); //preload arrows
-  preloadPointers((width / 4) * 3); //preload pointers
 
-  //text
+  marginBotY = height - 118; // Space for arrows
+  let center = (width / 4) * 3;
+
+  preloadArrows(center);
+
+  // Text properties
   subtitleSize = 48;
   textAlign(CENTER);
+
+  let y = int(random(-500, 300)); // Initialize y here
+  preloadPointers(center, y); // Use the initialized y value
 }
 
-//function to display subtitles (receives string as input)
+function draw() {
+  background(220);
+
+  // Display subtitle
+  subtitleX = width / 4;
+  subtitleY = height - 100;
+  displaySubtitle("BAZA AAC");
+
+  // Handle pointers
+  for (let i = pointers.length - 1; i >= 0; i--) {
+    if (pointers[i].die() || pointers[i].y >= height) {
+      pointers.splice(i, 1); // Remove dead or out-of-bounds pointers
+    } else {
+      pointers[i].move();
+      pointers[i].display();
+    }
+  }
+
+  // Display arrows
+  for (let arrow of arrows) {
+    arrow.display();
+  }
+
+  // Detect beat and spawn pointers
+  detectBeat(switcher);
+  if (switcher) {
+    spawnPointer();
+  }
+}
+
 function displaySubtitle(subtitle) {
   fill(0);
   textFont(font);
@@ -99,33 +103,6 @@ function displaySubtitle(subtitle) {
   text(subtitle, subtitleX, subtitleY);
 }
 
-function draw() {
-  background(220);
-
-  subtitleX = width / 4; //x of subtitle
-  subtitleY = height - 100; //y of subtitle
-  displaySubtitle("BAZA AAC"); //add subtitle to canvas
-
-  for (let i = pointers.length - 1; i >= 0; i--) {
-    if (pointers[i].die()) {
-      pointers.splice(i, 1); // Remove pointer if it is pressed on
-    } else {
-      pointers[i].move(); //move pointer
-      pointers[i].display(); //display pointer
-      if (pointers[i].y >= height) {
-        if (pointers.length >= 0) {
-          pointers.splice(i, 1); //if the pointer exceeds the margin and isn't pressed, delete it
-        }
-      }
-    }
-  }
-
-  for (let i = 0; i < arrows.length; i++) {
-    arrows[i].display(); //display arrows
-  }
-}
-
-//function to handle interaction
 function handleInteraction(centerX, arrow) {
   for (let i = pointers.length - 1; i >= 0; i--) {
     if (pointers[i].x === centerX && pointers[i].intersect(arrow.x, arrow.y)) {
@@ -134,7 +111,7 @@ function handleInteraction(centerX, arrow) {
   }
 }
 
-//add key input interaction
+// Add key input interaction
 function keyPressed() {
   let center = (width / 4) * 3;
   let centerL = center - 100;
@@ -152,15 +129,33 @@ function keyPressed() {
     arrowR.setPressed(false);
     handleInteraction(centerR, arrowR);
   }
-
-  if (key === " ") {
-    playMusic();
-  }
 }
 
-//same interaction but when the key is released
 function keyReleased() {
   if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
   if (keyCode === UP_ARROW) arrowUP.setPressed(true);
   if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
+}
+
+// Spawn a pointer at a random position based on beat
+function spawnPointer() {
+  let center = (width / 4) * 3;
+  let posX = [center - 100, center, center + 100];
+
+  let type = int(random(0, 3));
+  let x = posX[type];
+  let colorP;
+
+  if (type === 0) colorP = color(255, 0, 0);
+  else if (type === 1) colorP = color(0, 255, 0);
+  else if (type === 2) colorP = color(0, 0, 255);
+
+  pointers.push(new Pointer(x, -48, 48, colorP));
+}
+
+function mousePressed() {
+  if (getAudioContext().state !== 'running') {
+    getAudioContext().resume(); // Resume the AudioContext
+  }
+  playMusic(); // Start playing music on user gesture
 }
