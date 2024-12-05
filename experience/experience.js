@@ -21,7 +21,7 @@ function preloadFont() {
 function preloadPointers(center, y) {
   let posX = [center - 100, center, center + 100];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 1; i++) {
     let type = int(random(0, 3));
     let randomPos = posX[type];
     let colorP;
