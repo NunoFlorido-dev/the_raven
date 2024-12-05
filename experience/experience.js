@@ -102,9 +102,7 @@ function setup() {
 
   poem_paragraphs = split(fullText, "\n\n");
 
-  for (let i = 0; i < poem_paragraphs.length; i++) {
-    print(poem_paragraphs[i]);
-  }
+  print(getSyllablesInParagraphs(poem_paragraphs));
 }
 
 //function to display subtitles (receives string as input)
