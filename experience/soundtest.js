@@ -2,6 +2,7 @@ let song;
 
 function loadMusic() {
   song = loadSound("../assets/music/sound.mp3");
+  fft = new p5.FFT(); // Initialize after loadSound has been called
 }
 
 function playMusic() {
@@ -14,16 +15,20 @@ function playMusic() {
 
 function setupMusic() {
   playMusic();
-  fft = new p5.FFT();
 }
 
 let fft;
-let treshold = 50;
+let threshold = 50;
+let lastBeatTime = 0; // To track the last beat time
+let beatCooldown = 300; // Cooldown in milliseconds
 
-function detectBeat(switcher) {
+function detectBeat() {
+  let spectrum = fft.analyze();
   let bass = fft.getEnergy("bass");
-  if (bass > treshold) {
+
+  if (bass > threshold && millis() - lastBeatTime > beatCooldown) {
     switcher = true;
+    lastBeatTime = millis(); // Update last beat time
   } else {
     switcher = false;
   }

@@ -101,6 +101,13 @@ function draw() {
   subtitleY = height - 100;
   displaySubtitle("BAZA AAC");
 
+  detectBeat(); // No need to pass switcher as argument
+
+  if (switcher) {
+    spawnPointer();
+    switcher = false; // Reset switcher after spawning
+  }
+
   // Handle pointers
   for (let i = pointers.length - 1; i >= 0; i--) {
     if (pointers[i].die() || pointers[i].y >= height) {
@@ -114,12 +121,6 @@ function draw() {
   // Display arrows
   for (let arrow of arrows) {
     arrow.display();
-  }
-
-  // Detect beat and spawn pointers
-  detectBeat(switcher);
-  if (switcher) {
-    spawnPointer();
   }
 }
 
