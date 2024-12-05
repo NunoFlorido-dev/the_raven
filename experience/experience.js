@@ -207,8 +207,23 @@ function keyPressed() {
 
   if (key === "q") {
     // Move backward in syllables, then words, then paragraphs
-    currentSyllableIndex--;
-    handleSyllableBounds(false);
+    if (currentSyllableIndex > 0) {
+      currentSyllableIndex--;
+    } else if (currentWordIndex > 0) {
+      // If syllable index is 0, go to previous word
+      currentWordIndex--;
+      currentSyllableIndex =
+        syllableArrays[currentParagraphIndex][currentWordIndex].length - 1; // Set syllable index to last syllable of the previous word
+    } else if (currentParagraphIndex > 0) {
+      // If word index is 0, go to previous paragraph
+      currentParagraphIndex--;
+      const prevParagraph = syllableArrays[currentParagraphIndex];
+      currentWordIndex = prevParagraph.length - 1; // Set to last word of the previous paragraph
+      currentSyllableIndex =
+        syllableArrays[currentParagraphIndex][currentWordIndex].length - 1; // Set to last syllable of the last word
+    }
+
+    handleSyllableBounds(false); // Ensure bounds are handled after moving
   }
 }
 
