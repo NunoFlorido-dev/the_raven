@@ -12,12 +12,15 @@ function playMusic() {
   }
 }
 
+function setupMusic() {
+  playMusic();
+  fft = new p5.FFT();
+}
+
 let fft;
 let treshold = 50;
 
 function detectBeat(switcher) {
-  playMusic();
-  fft = new p5.FFT();
   let bass = fft.getEnergy("bass");
   if (bass > treshold) {
     switcher = true;

@@ -89,6 +89,8 @@ function setup() {
 
   let y = int(random(-500, 300)); // Initialize y here
   preloadPointers(center, y); // Use the initialized y value
+
+  setupMusic();
 }
 
 function draw() {
