@@ -1,6 +1,19 @@
-let font; //load font
 let poem; //load poem
-let poem_paragraphs; //array for poem paragraphs
+let font; //load font
+
+function loadPoem() {
+  poem = loadStrings("../assets/poem_file/theraven_formatted.txt");
+}
+
+//function to load font
+function preloadFont() {
+  font = loadFont("../assets/font/TheRaven-Regular.ttf");
+}
+
+//current syllables, words and paragraphs
+let currentParagraphIndex = 0;
+let currentWordIndex = 0;
+let currentSyllableIndex = 0;
 
 //create arrows
 let arrowL;
@@ -14,15 +27,6 @@ let subtitleY;
 let subtitleSize;
 
 let marginBotY;
-
-function loadPoem() {
-  poem = loadStrings("../assets/poem_file/theraven_formatted.txt");
-}
-
-//function to load font
-function preloadFont() {
-  font = loadFont("../assets/font/TheRaven-Regular.ttf");
-}
 
 //function to load arrows
 function preloadArrows(center) {
@@ -81,36 +85,56 @@ function preloadPointers(center) {
   }
 }
 
+let poem_paragraphs = [];
+let syllableArrays = [];
+
 function preload() {
-  loadMusic();
-  loadPoem();
+  loadPoem(); // This starts loading the poem
+  preloadFont(); // This loads the font
+  loadMusic(); // Load other assets if needed
+}
+
+function loadPoem() {
+  poem = loadStrings("../assets/poem_file/theraven_formatted.txt");
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   marginBotY = height - 118; //place for arrows
-  preloadFont(); //preload font
-  preloadArrows((width / 4) * 3); //preload arrows
-  preloadPointers((width / 4) * 3); //preload pointers
+  preloadArrows((width / 4) * 3);
+  preloadPointers((width / 4) * 3);
 
-  //text
+  // Process poem only when it is fully loaded
+  if (poem) {
+    let fullText = poem.join("\n"); // Join the lines into full text
+    poem_paragraphs = fullText.split("\n\n"); // Split into paragraphs
+    syllableArrays = getSyllablesFromParagraphs();
+    print(syllableArrays);
+  }
+
   subtitleSize = 48;
   textAlign(CENTER);
-
-  //poem file related
-  let fullText = poem.join("\n");
-
-  poem_paragraphs = split(fullText, "\n\n");
-
-  print(getSyllablesInParagraphs(poem_paragraphs));
 }
 
-//function to display subtitles (receives string as input)
-function displaySubtitle(subtitle) {
-  fill(0);
-  textFont(font);
-  textSize(subtitleSize);
-  text(subtitle, subtitleX, subtitleY);
+function displaySyllable(paragraphIndex, wordIndex, syllableIndex) {
+  if (paragraphIndex < syllableArrays.length) {
+    const paragraph = syllableArrays[paragraphIndex]; // Get syllables for the paragraph
+    if (wordIndex < paragraph.length) {
+      const word = paragraph[wordIndex]; // Get syllables for the word
+      if (syllableIndex < word.length) {
+        fill(0);
+        textFont(font);
+        textSize(subtitleSize);
+        text(word[syllableIndex], subtitleX, subtitleY); // Display the syllable
+      } else {
+        console.log("No more syllables in this word.");
+      }
+    } else {
+      console.log("No more words in this paragraph.");
+    }
+  } else {
+    console.log("No more paragraphs.");
+  }
 }
 
 function draw() {
@@ -118,7 +142,11 @@ function draw() {
 
   subtitleX = width / 4; //x of subtitle
   subtitleY = height - 100; //y of subtitle
-  displaySubtitle("BAZA AAC"); //add subtitle to canvas
+  displaySyllable(
+    currentParagraphIndex,
+    currentWordIndex,
+    currentSyllableIndex
+  );
 
   for (let i = pointers.length - 1; i >= 0; i--) {
     if (pointers[i].die()) {
@@ -170,6 +198,18 @@ function keyPressed() {
   if (key === " ") {
     playMusic();
   }
+
+  if (key === "e") {
+    // Move forward in syllables, then words, then paragraphs
+    currentSyllableIndex++;
+    handleSyllableBounds(true);
+  }
+
+  if (key === "q") {
+    // Move backward in syllables, then words, then paragraphs
+    currentSyllableIndex--;
+    handleSyllableBounds(false);
+  }
 }
 
 //same interaction but when the key is released
@@ -177,4 +217,46 @@ function keyReleased() {
   if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
   if (keyCode === UP_ARROW) arrowUP.setPressed(true);
   if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
+}
+
+//handle syllable bounds
+function handleSyllableBounds(forward) {
+  const paragraph = syllableArrays[currentParagraphIndex];
+  const word = paragraph[currentWordIndex];
+
+  if (forward) {
+    if (currentSyllableIndex >= word.length) {
+      currentSyllableIndex = 0;
+      currentWordIndex++;
+
+      if (currentWordIndex >= paragraph.length) {
+        currentWordIndex = 0;
+        currentParagraphIndex++;
+
+        if (currentParagraphIndex >= syllableArrays.length) {
+          currentParagraphIndex = syllableArrays.length - 1; // Limit to last paragraph
+          console.log("Reached the end of the poem.");
+        }
+      }
+    }
+  } else {
+    if (currentSyllableIndex < 0) {
+      currentWordIndex--;
+
+      if (currentWordIndex < 0) {
+        currentParagraphIndex--;
+
+        if (currentParagraphIndex < 0) {
+          currentParagraphIndex = 0; // Limit to first paragraph
+          console.log("Reached the beginning of the poem.");
+        } else {
+          const prevParagraph = syllableArrays[currentParagraphIndex];
+          currentWordIndex = prevParagraph.length - 1;
+        }
+      }
+
+      const prevWord = paragraph[currentWordIndex];
+      currentSyllableIndex = prevWord.length - 1;
+    }
+  }
 }

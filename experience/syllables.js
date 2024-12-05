@@ -1,4 +1,10 @@
 function splitSyllables(word) {
+  if (typeof word !== "string") {
+    console.error("Invalid word:", word);
+    return [];
+  }
+  console.log("Processing word:", word);
+
   var response = [];
   var isSpecialCase = false;
   var nums = (word.match(/[aeiou]/gi) || []).length;
@@ -49,6 +55,9 @@ function splitSyllables(word) {
 }
 
 function splitParagraphIntoWords(paragraph) {
+  if (typeof paragraph !== "string") {
+    throw new Error("Invalid input: paragraph must be a string");
+  }
   return paragraph.split(/\s+/);
 }
 
@@ -56,9 +65,10 @@ function getSyllablesInWords(words) {
   return words.map(splitSyllables); // Split each word into syllables
 }
 
-function getSyllablesInParagraphs(paragraphs) {
-  return paragraphs.map((paragraph) => {
+function getSyllablesFromParagraphs() {
+  let syllableArrays = poem_paragraphs.map((paragraph) => {
     const words = splitParagraphIntoWords(paragraph);
-    return words.map(splitSyllables);
+    return words.map(splitSyllables); // Split each word into syllables
   });
+  return syllableArrays;
 }
