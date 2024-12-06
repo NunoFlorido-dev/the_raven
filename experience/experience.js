@@ -137,6 +137,13 @@ function displaySyllable(paragraphIndex, wordIndex, syllableIndex) {
   }
 }
 
+function displayCurrentParagraph(paragraphIndex) {
+  fill(0);
+  textFont(font);
+  textSize(subtitleSize - 12);
+  text("E" + (paragraphIndex + 1), width - 40, 40);
+}
+
 function draw() {
   background(220);
 
@@ -147,6 +154,8 @@ function draw() {
     currentWordIndex,
     currentSyllableIndex
   );
+
+  displayCurrentParagraph(currentParagraphIndex);
 
   for (let i = pointers.length - 1; i >= 0; i--) {
     if (pointers[i].die()) {
