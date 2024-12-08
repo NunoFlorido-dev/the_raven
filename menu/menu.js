@@ -33,6 +33,11 @@ let menuSelected = 0;
 let volume = 0;
 narrationState = true;
 
+let leftArrowPressed = false;
+let upArrowPressed = false;
+let rightArrowPressed = false;
+let startExperience = false;
+
 //function to load font
 function preloadFont() {
   font = loadFont("../assets/font/TheRaven-Regular.ttf");
@@ -80,16 +85,16 @@ function preloadButtons() {
     "../assets/icons/credits.png"
   );
   //general settings buttons
-  audio = new ButtonText((width / 6) * 1.2, height / 3 + 50, 35, "AUDIO", font);
+  audio = new ButtonText((width / 6) * 1.6, height / 3 + 50, 35, "AUDIO", font);
   keyBinds = new ButtonText(
-    (width / 6) * 1.2,
+    (width / 6) * 1.6,
     height / 2,
     35,
     "KEY-BINDS",
     font
   );
   visual = new ButtonText(
-    (width / 6) * 1.2,
+    (width / 6) * 1.6,
     height / 2 + (height / 2 - height / 3) - 50,
     35,
     "VISUAL",
@@ -133,36 +138,48 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+
   marginBotY = height - 118; //place for arrows
   preloadFont(); //preload font
   preloadArrows((width / 4) * 3); //preload arrows
   preloadButtons();
-  //preloadPointers((width / 4) * 3); //preload pointers
-  menuimage = loadImage("../assets/images/macaquinho.jpg");
+
   //text
   subtitleX = (width / 4) * 3 - 10; //x of subtitle
   subtitleY = height / 2; //y of subtitle
   subtitleSize = 25;
+
   textAlign(CENTER);
-  c = color(110, 110, 110);
-  c.setAlpha(240);
+  menuColor = color(180);
+  menuColor.setAlpha(240);
   textFont(font);
   textSize(25);
 }
 
 function draw() {
-  background(220);
+  background(250);
   fill(0);
-  text("PRESS ANY ARROW TO START", (width / 4) * 3 - 10, height / 2); //add subtitle to canvas
+
+  text("PRESS THE 3 ARROWS TO START", (width / 4) * 3 - 10, height / 2); //add subtitle to canvas
+
   for (let i = 0; i < arrows.length; i++) {
     arrows[i].display(); //display arrows
   }
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].display();
   }
-  image(menuimage, width / 4, height / 16, width / 4, height - 100);
+
+  config();
+
+  if (leftArrowPressed && upArrowPressed && rightArrowPressed) {
+    startExperience = true;
+    window.location.href = "../experience/experience.html"; // Navigate to the experience
+  }
+}
+
+function config() {
   if (settings) {
-    fill(c);
+    fill(menuColor);
     rect(width / 8, height / 8, (width / 8) * 6, (height / 8) * 6); //substituir por imagem de background das settings
     for (let i = 0; i < buttonsSettings.length; i++) {
       buttonsSettings[i].display();
@@ -173,10 +190,10 @@ function draw() {
           buttonsAudio[i].display();
         }
         fill(255);
-        textSize(120);
+        textSize(85);
         text("AUDIO", (width / 6) * 3.55, (height / 4) * 1.2);
         fill(0);
-        textSize(50);
+        textSize(40);
         text("VOLUME", (width / 6) * 3.55, (height / 2) * 0.95);
         rect((width / 3) * 1.35, (height / 4) * 2.1, (width / 4) * 1.15, 20); //substituir por imagem da barra de volume
         rect(
@@ -194,14 +211,14 @@ function draw() {
       case 1:
         //to do keybinds settings
         fill(255);
-        textSize(120);
+        textSize(85);
         text("KEY-BINDS", (width / 6) * 3.55, (height / 4) * 1.2);
         textSize(25);
         break;
       case 2:
         //to do visual settings
         fill(255);
-        textSize(120);
+        textSize(85);
         text("VISUAL", (width / 6) * 3.55, (height / 4) * 1.2);
         textSize(25);
         break;
@@ -211,15 +228,34 @@ function draw() {
   }
 }
 
+//add key input interaction
+function keyPressed() {
+  if (keyCode === LEFT_ARROW && arrowL.isPressed) {
+    leftArrowPressed = true;
+    arrowL.setPressed(false);
+  }
+  if (keyCode === UP_ARROW && arrowUP.isPressed) {
+    upArrowPressed = true;
+    arrowUP.setPressed(false);
+  }
+  if (keyCode === RIGHT_ARROW && arrowR.isPressed) {
+    rightArrowPressed = true;
+    arrowR.setPressed(false);
+  }
+}
+
 //when the key is released start experience
 function keyReleased() {
   if (credits == false && settings == false) {
-    if (keyCode === LEFT_ARROW)
-      window.location.href = "../experience/experience.html";
-    else if (keyCode === UP_ARROW)
-      window.location.href = "../experience/experience.html";
-    else if (keyCode === RIGHT_ARROW)
-      window.location.href = "../experience/experience.html";
+    if (keyCode === LEFT_ARROW) {
+      leftArrowPressed = false;
+    }
+    if (keyCode === UP_ARROW) {
+      upArrowPressed = false;
+    }
+    if (keyCode === RIGHT_ARROW) {
+      rightArrowPressed = false;
+    }
   }
 }
 

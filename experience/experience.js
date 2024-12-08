@@ -100,7 +100,7 @@ function displaySubtitle(subtitle) {
 }
 
 function draw() {
-  background(220);
+  background(250);
 
   subtitleX = width / 4; //x of subtitle
   subtitleY = height - 100; //y of subtitle
