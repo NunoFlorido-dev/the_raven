@@ -139,8 +139,6 @@ function draw() {
   buttondefs.display();
   buttoncredits.display();
 
-  menu.display();
-
   for (let i = pointers.length - 1; i >= 0; i--) {
     if (pointers[i].die()) {
       pointers.splice(i, 1); // Remove pointer if it is pressed on
@@ -158,6 +156,8 @@ function draw() {
   for (let i = 0; i < arrows.length; i++) {
     arrows[i].display(); //display arrows
   }
+
+  menu.display();
 }
 
 //function to handle interaction
