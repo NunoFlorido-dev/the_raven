@@ -14,6 +14,7 @@ class Menu {
     this.buttons = [];
     this.buttonsSettings = [];
     this.buttonsAudio = [];
+    this.buttonsKeybinds = [];
     this.initButtons();
   }
 
@@ -56,7 +57,18 @@ class Menu {
         "+",
         this.font
       ),
+
       new ButtonImg((width / 6) * 3.5, (height / 4) * 3, 40, 40, ""),
+    ];
+
+    this.buttonsKeybinds = [
+      new ButtonText(
+        (width / 6) * 3.5,
+        height / 2 + (height / 2 - height / 3) - 150,
+        64,
+        "WAD",
+        this.font
+      ),
     ];
   }
 
@@ -132,6 +144,11 @@ class Menu {
     fill(255);
     textSize(85);
     text("KEY-BINDS", (width / 6) * 3.55, (height / 4) * 1.2);
+
+    for (let button of this.buttonsKeybinds) {
+      // Use this.buttonsKeybinds
+      button.display();
+    }
   }
 
   displayVisualSettings() {
