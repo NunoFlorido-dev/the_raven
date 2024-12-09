@@ -143,7 +143,7 @@ class Menu {
   displayKeybindsSettings() {
     fill(255);
     textSize(85);
-    text("KEY-BINDS", (width / 6) * 3.55, (height / 4) * 1.2);
+    text("KEYBINDS", (width / 6) * 3.55, (height / 4) * 1.2);
 
     for (let button of this.buttonsKeybinds) {
       // Use this.buttonsKeybinds
