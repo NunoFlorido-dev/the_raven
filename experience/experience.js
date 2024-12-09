@@ -1,5 +1,7 @@
 let font; //load font
 
+let menu;
+
 //create arrows
 let arrowL;
 let arrowUP;
@@ -12,6 +14,29 @@ let subtitleY;
 let subtitleSize;
 
 let marginBotY;
+
+let settingsIcon;
+let creditsIcon;
+
+let buttondefs;
+let buttoncredits;
+
+function preloadButtons() {
+  buttondefs = new ButtonImg(
+    (width / 10) * 0.2,
+    20,
+    40,
+    40,
+    "../assets/icons/settings.png"
+  );
+  buttoncredits = new ButtonImg(
+    (width / 10) * 9.72 - 20,
+    20,
+    40,
+    40,
+    "../assets/icons/credits.png"
+  );
+}
 
 //function to load font
 function preloadFont() {
@@ -77,6 +102,8 @@ function preloadPointers(center) {
 
 function preload() {
   loadMusic();
+  settingsIcon = loadImage("../assets/icons/settings.png");
+  creditsIcon = loadImage("../assets/icons/credits.png");
 }
 
 function setup() {
@@ -85,6 +112,9 @@ function setup() {
   preloadFont(); //preload font
   preloadArrows((width / 4) * 3); //preload arrows
   preloadPointers((width / 4) * 3); //preload pointers
+  preloadButtons();
+
+  menu = new Menu(font, settingsIcon, creditsIcon);
 
   //text
   subtitleSize = 48;
@@ -105,6 +135,11 @@ function draw() {
   subtitleX = width / 4; //x of subtitle
   subtitleY = height - 100; //y of subtitle
   displaySubtitle("BAZA AAC"); //add subtitle to canvas
+
+  buttondefs.display();
+  buttoncredits.display();
+
+  menu.display();
 
   for (let i = pointers.length - 1; i >= 0; i--) {
     if (pointers[i].die()) {
@@ -163,4 +198,8 @@ function keyReleased() {
   if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
   if (keyCode === UP_ARROW) arrowUP.setPressed(true);
   if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
+}
+
+function mouseReleased() {
+  menu.handleMouseClick(mouseX, mouseY);
 }
