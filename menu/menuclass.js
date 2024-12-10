@@ -236,7 +236,6 @@ class Menu {
         this.volume = min(9, this.volume + 1); // Increase volume
       } else if (this.buttonsAudio[2].isPressed(mx, my)) {
         this.narrationState = !this.narrationState;
-        this.narrationState = !this.narrationState; // Toggle narration
       }
     }
   }
