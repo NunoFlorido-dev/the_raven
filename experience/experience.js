@@ -249,15 +249,15 @@ function draw() {
   subtitleX = width / 4; // x of subtitle
   subtitleY = height - 100; // y of subtitle
 
+  displaySyllable(
+    currentParagraphIndex,
+    currentWordIndex,
+    currentSyllableIndex
+  );
+
+  displayCurrentParagraph(currentParagraphIndex);
+
   if (!paused) {
-    displaySyllable(
-      currentParagraphIndex,
-      currentWordIndex,
-      currentSyllableIndex
-    );
-
-    displayCurrentParagraph(currentParagraphIndex);
-
     // Handle pointer interactions
     for (let i = pointers.length - 1; i >= 0; i--) {
       if (pointers[i].die()) {
