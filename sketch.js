@@ -190,19 +190,38 @@ function draw() {
   }
 }
 
-// Key input interaction when a key is pressed
 function keyPressed() {
   console.log(`Key pressed: ${key}`);
   if (!credits && !settings) {
     const changeKeys = menu.getChangeKeys();
     if (changeKeys) {
-      if (keyCode === LEFT_ARROW) arrowL.setPressed(false);
-      if (keyCode === UP_ARROW) arrowUP.setPressed(false);
-      if (keyCode === RIGHT_ARROW) arrowR.setPressed(false);
+      // Using arrow keys
+      if (keyCode === LEFT_ARROW) {
+        arrowL.setPressed(false);
+        leftArrowPressed = true;
+      }
+      if (keyCode === UP_ARROW) {
+        arrowUP.setPressed(false);
+        upArrowPressed = true;
+      }
+      if (keyCode === RIGHT_ARROW) {
+        arrowR.setPressed(false);
+        rightArrowPressed = true;
+      }
     } else {
-      if (key.toUpperCase() === "A") arrowL.setPressed(false);
-      if (key.toUpperCase() === "W") arrowUP.setPressed(false);
-      if (key.toUpperCase() === "D") arrowR.setPressed(false);
+      // Using WAD keys
+      if (key.toUpperCase() === "A") {
+        arrowL.setPressed(false);
+        leftArrowPressed = true;
+      }
+      if (key.toUpperCase() === "W") {
+        arrowUP.setPressed(false);
+        upArrowPressed = true;
+      }
+      if (key.toUpperCase() === "D") {
+        arrowR.setPressed(false);
+        rightArrowPressed = true;
+      }
     }
   }
 }
