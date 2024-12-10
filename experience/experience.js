@@ -243,41 +243,46 @@ function displayCurrentParagraph(paragraphIndex) {
 }
 
 function draw() {
-  background(220);
+  background(250);
 
-  subtitleX = width / 4; //x of subtitle
-  subtitleY = height - 100; //y of subtitle
-  displaySyllable(
-    currentParagraphIndex,
-    currentWordIndex,
-    currentSyllableIndex
-  );
+  // Regular updates when not paused
+  subtitleX = width / 4; // x of subtitle
+  subtitleY = height - 100; // y of subtitle
 
-  displayCurrentParagraph(currentParagraphIndex);
+  if (!paused) {
+    displaySyllable(
+      currentParagraphIndex,
+      currentWordIndex,
+      currentSyllableIndex
+    );
 
-  for (let i = pointers.length - 1; i >= 0; i--) {
-    if (pointers[i].die()) {
-      pointers.splice(i, 1); // Remove pointer if it is pressed on
-    } else {
-      pointers[i].move(); //move pointer
-      pointers[i].display(); //display pointer
-      if (pointers[i].y >= height) {
-        if (pointers.length >= 0) {
-          pointers.splice(i, 1); //if the pointer exceeds the margin and isn't pressed, delete it
+    displayCurrentParagraph(currentParagraphIndex);
+
+    // Handle pointer interactions
+    for (let i = pointers.length - 1; i >= 0; i--) {
+      if (pointers[i].die()) {
+        pointers.splice(i, 1); // Remove pointer if it is pressed on
+      } else {
+        pointers[i].move(); // Move pointer
+        pointers[i].display(); // Display pointer
+        if (pointers[i].y >= height) {
+          pointers.splice(i, 1); // Delete pointer if it exceeds the margin
         }
       }
     }
-  }
 
-  for (let i = 0; i < arrows.length; i++) {
-    arrows[i].display(); //display arrows
+    // Display arrows
+    fill(0);
+    noStroke();
+    for (let i = 0; i < arrows.length; i++) {
+      arrows[i].display();
+    }
+  } else {
+    // Display pause menu and stop other interactions
+    menu.display(); // Show menu options
   }
 
   buttondefs.display(); // Always show the settings button
-
-  if (paused) {
-    menu.display();
-  }
 }
 
 //function to handle interaction
