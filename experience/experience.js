@@ -1,3 +1,5 @@
+let mode = "experience"; // Current context is the experience
+
 let font; //load font
 let menu;
 let paused = false;
@@ -141,8 +143,11 @@ function draw() {
   if (!paused) {
     displaySubtitle("BAZA AAC"); //add subtitle to canvas
 
-    buttondefs.display();
-    buttoncredits.display();
+    buttondefs.display(); // Always show the settings button
+
+    if (mode === "homepage") {
+      buttoncredits.display(); // Show credits button only on the homepage
+    }
 
     for (let i = pointers.length - 1; i >= 0; i--) {
       if (pointers[i].die()) {

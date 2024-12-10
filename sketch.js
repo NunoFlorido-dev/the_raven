@@ -1,3 +1,5 @@
+let mode = "homepage"; // Current context is the homepage
+
 let font; //load font
 let paused = false;
 
@@ -172,8 +174,11 @@ function draw() {
   for (let i = 0; i < arrows.length; i++) {
     arrows[i].display(); //display arrows
   }
-  for (let i = 0; i < buttons.length; i++) {
-    buttons[i].display();
+
+  buttondefs.display(); // Always show the settings button
+
+  if (mode === "homepage") {
+    buttoncredits.display(); // Show credits button only on the homepage
   }
 
   if (leftArrowPressed && upArrowPressed && rightArrowPressed) {

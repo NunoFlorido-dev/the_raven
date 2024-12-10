@@ -171,15 +171,15 @@ class Menu {
   handleMouseClick(mx, my) {
     // Check if settings button is clicked
     if (this.buttons[0].isPressed(mx, my)) {
-      paused = !paused; // Toggle paused state
+      paused = true; // Toggle paused state
       this.settings = paused; // If paused, show settings
       this.credits = false; // Hide credits
       return; // Exit after handling the button
     }
 
-    // Check if credits button is clicked
-    if (this.buttons[1].isPressed(mx, my)) {
-      paused = !paused; // Toggle paused state
+    // Check if credits button is clicked (only in homepage mode)
+    if (mode === "homepage" && this.buttons[1].isPressed(mx, my)) {
+      paused = true; // Toggle paused state
       this.credits = paused; // If paused, show credits
       this.settings = false; // Hide settings
       return; // Exit after handling the button
