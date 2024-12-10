@@ -1,5 +1,11 @@
+let mode = "experience"; // Current context is the experience
+
 let poem; //load poem
 let font; //load font
+
+let paused = false;
+
+let menu; //load menu
 
 function loadPoem() {
   poem = loadStrings("../assets/poem_file/theraven_formatted.txt");
@@ -28,6 +34,32 @@ let subtitleSize;
 
 let marginBotY;
 
+//buttons
+let buttoncredits;
+let buttondefs;
+let audio;
+let volumeUp;
+let volumeDown;
+let narration;
+let keyBinds;
+let visual;
+let buttons = []; // create buttons array
+let buttonsSettings = [];
+let buttonsAudio = [];
+
+//states and other things
+let settings = false;
+let credits = false;
+let menuColor;
+let menuSelected = 0;
+let volume = 0;
+narrationState = true;
+
+let leftArrowPressed = false;
+let upArrowPressed = false;
+let rightArrowPressed = false;
+let startExperience = false;
+
 //function to load arrows
 function preloadArrows(center) {
   arrowL = new Arrow(
@@ -53,6 +85,69 @@ function preloadArrows(center) {
   );
 
   arrows = [arrowL, arrowUP, arrowR];
+}
+function preloadButtons() {
+  buttondefs = new ButtonImg(
+    (width / 10) * 0.2,
+    20,
+    40,
+    40,
+    "../assets/icons/settings.png"
+  );
+  buttoncredits = new ButtonImg(
+    (width / 10) * 9.72 - 20,
+    20,
+    40,
+    40,
+    "../assets/icons/credits.png"
+  );
+  //general settings buttons
+  audio = new ButtonText((width / 6) * 1.6, height / 3 + 50, 35, "AUDIO", font);
+  keyBinds = new ButtonText(
+    (width / 6) * 1.6,
+    height / 2,
+    35,
+    "KEY-BINDS",
+    font
+  );
+  visual = new ButtonText(
+    (width / 6) * 1.6,
+    height / 2 + (height / 2 - height / 3) - 50,
+    35,
+    "VISUAL",
+    font
+  );
+  //audio settings buttons
+  volumeDown = new ButtonText(
+    (width / 6) * 2.57,
+    (height / 4) * 2.2,
+    35,
+    "-",
+    font
+  );
+  volumeUp = new ButtonText(
+    (width / 6) * 4.55,
+    (height / 4) * 2.2,
+    35,
+    "+",
+    font
+  );
+  keybindWAD = new ButtonText(
+    (width / 6) * 1.6,
+    height / 2 + (height / 2 - height / 3) - 50,
+    35,
+    "WAD",
+    font
+  );
+  narration = new ButtonImg((width / 6) * 3.5, (height / 4) * 3, 40, 40, ""); //substituir imagem por imagem do botao do narration
+  //keybinds settings buttons
+  //...
+  //visual settings buttons
+  //...
+  //arrays of buttons
+  buttons = [buttondefs, buttoncredits];
+  buttonsSettings = [audio, keyBinds, visual];
+  buttonsAudio = [volumeDown, volumeUp, narration];
 }
 
 //create array with pointers
@@ -103,6 +198,9 @@ function setup() {
   marginBotY = height - 118; //place for arrows
   preloadArrows((width / 4) * 3);
   preloadPointers((width / 4) * 3);
+  preloadButtons();
+
+  menu = new Menu(font);
 
   // Process poem only when it is fully loaded
   if (poem) {
@@ -174,6 +272,12 @@ function draw() {
   for (let i = 0; i < arrows.length; i++) {
     arrows[i].display(); //display arrows
   }
+
+  buttondefs.display(); // Always show the settings button
+
+  if (paused) {
+    menu.display();
+  }
 }
 
 //function to handle interaction
@@ -191,17 +295,43 @@ function keyPressed() {
   let centerL = center - 100;
   let centerR = center + 100;
 
-  if (keyCode === LEFT_ARROW && arrowL.isPressed) {
-    arrowL.setPressed(false);
-    handleInteraction(centerL, arrowL);
-  }
-  if (keyCode === UP_ARROW && arrowUP.isPressed) {
-    arrowUP.setPressed(false);
-    handleInteraction(center, arrowUP);
-  }
-  if (keyCode === RIGHT_ARROW && arrowR.isPressed) {
-    arrowR.setPressed(false);
-    handleInteraction(centerR, arrowR);
+  if (!credits && !settings) {
+    const changeKeys = menu.getChangeKeys();
+    if (changeKeys) {
+      // Using arrow keys
+      if (keyCode === LEFT_ARROW) {
+        handleInteraction(centerL, arrowL);
+        arrowL.setPressed(false);
+        leftArrowPressed = true;
+      }
+      if (keyCode === UP_ARROW) {
+        handleInteraction(center, arrowUP);
+        arrowUP.setPressed(false);
+        upArrowPressed = true;
+      }
+      if (keyCode === RIGHT_ARROW) {
+        handleInteraction(centerR, arrowR);
+        arrowR.setPressed(false);
+        rightArrowPressed = true;
+      }
+    } else {
+      // Using WAD keys
+      if (key.toUpperCase() === "A") {
+        handleInteraction(centerL, arrowL);
+        arrowL.setPressed(false);
+        leftArrowPressed = true;
+      }
+      if (key.toUpperCase() === "W") {
+        handleInteraction(center, arrowUP);
+        arrowUP.setPressed(false);
+        upArrowPressed = true;
+      }
+      if (key.toUpperCase() === "D") {
+        handleInteraction(centerR, arrowR);
+        arrowR.setPressed(false);
+        rightArrowPressed = true;
+      }
+    }
   }
 
   if (key === " ") {
@@ -238,9 +368,18 @@ function keyPressed() {
 
 //same interaction but when the key is released
 function keyReleased() {
-  if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
-  if (keyCode === UP_ARROW) arrowUP.setPressed(true);
-  if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
+  if (!credits && !settings) {
+    const changeKeys = menu.getChangeKeys();
+    if (changeKeys) {
+      if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
+      if (keyCode === UP_ARROW) arrowUP.setPressed(true);
+      if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
+    } else {
+      if (key.toUpperCase() === "A") arrowL.setPressed(true);
+      if (key.toUpperCase() === "W") arrowUP.setPressed(true);
+      if (key.toUpperCase() === "D") arrowR.setPressed(true);
+    }
+  }
 }
 
 //handle syllable bounds
@@ -283,4 +422,8 @@ function handleSyllableBounds(forward) {
       currentSyllableIndex = prevWord.length - 1;
     }
   }
+}
+
+function mouseReleased() {
+  menu.handleMouseClick(mouseX, mouseY);
 }
