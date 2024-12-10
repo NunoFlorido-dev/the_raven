@@ -42,10 +42,17 @@ class Menu {
         this.font
       ),
       new ButtonText(
-        (width / 6) * 1.2,
-        height / 2 - 260,
+        (width / 6) * 1.6,
+        height / 2 + 220,
         24,
         "CONTINUE",
+        this.font
+      ),
+      new ButtonText(
+        (width / 6) * 1.6,
+        height / 2 + 180,
+        24,
+        "RETURN TO HOMEPAGE",
         this.font
       ),
     ];
@@ -205,6 +212,10 @@ class Menu {
       paused = false; // Resume the game
       this.settings = false; // Close settings menu
       return; // Exit after handling the button
+    }
+
+    if (this.buttonsSettings[4].isPressed(mx, my)) {
+      window.location.href = "../index.html"; // Redirect to index.html
     }
 
     // Handle settings menu navigation
