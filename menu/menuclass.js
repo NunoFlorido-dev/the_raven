@@ -238,6 +238,15 @@ class Menu {
         this.narrationState = !this.narrationState;
       }
     }
+
+    // Keybinds settings interaction
+    if (this.menuSelected === 1) {
+      if (this.buttonsKeybinds[0].isPressed(mx, my)) {
+        this.changeKeys = false;
+      } else if (this.buttonsKeybinds[1].isPressed(mx, my)) {
+        this.changeKeys = true;
+      }
+    }
   }
 
   getChangeKeys() {
