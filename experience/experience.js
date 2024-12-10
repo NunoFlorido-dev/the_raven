@@ -186,17 +186,32 @@ function keyPressed() {
   let centerL = center - 100;
   let centerR = center + 100;
 
-  if (keyCode === LEFT_ARROW && arrowL.isPressed) {
-    arrowL.setPressed(false);
-    handleInteraction(centerL, arrowL);
-  }
-  if (keyCode === UP_ARROW && arrowUP.isPressed) {
-    arrowUP.setPressed(false);
-    handleInteraction(center, arrowUP);
-  }
-  if (keyCode === RIGHT_ARROW && arrowR.isPressed) {
-    arrowR.setPressed(false);
-    handleInteraction(centerR, arrowR);
+  if (menu.getChangeKeys()) {
+    if (keyCode === LEFT_ARROW && arrowL.isPressed) {
+      arrowL.setPressed(false);
+      handleInteraction(centerL, arrowL);
+    }
+    if (keyCode === UP_ARROW && arrowUP.isPressed) {
+      arrowUP.setPressed(false);
+      handleInteraction(center, arrowUP);
+    }
+    if (keyCode === RIGHT_ARROW && arrowR.isPressed) {
+      arrowR.setPressed(false);
+      handleInteraction(centerR, arrowR);
+    }
+  } else {
+    if (key === "A" && arrowL.isPressed) {
+      arrowL.setPressed(false);
+      handleInteraction(centerL, arrowL);
+    }
+    if (key === "W" && arrowUP.isPressed) {
+      arrowUP.setPressed(false);
+      handleInteraction(center, arrowUP);
+    }
+    if (key === "D" && arrowR.isPressed) {
+      arrowR.setPressed(false);
+      handleInteraction(centerR, arrowR);
+    }
   }
 
   if (key === " ") {
@@ -206,9 +221,15 @@ function keyPressed() {
 
 //same interaction but when the key is released
 function keyReleased() {
-  if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
-  if (keyCode === UP_ARROW) arrowUP.setPressed(true);
-  if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
+  if (menu.getChangeKeys()) {
+    if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
+    if (keyCode === UP_ARROW) arrowUP.setPressed(true);
+    if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
+  } else {
+    if (key === "A") arrowL.setPressed(true);
+    if (key === "W") arrowUP.setPressed(true);
+    if (key === "D") arrowR.setPressed(true);
+  }
 }
 
 function mouseReleased() {

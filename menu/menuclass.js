@@ -16,6 +16,7 @@ class Menu {
     this.buttonsAudio = [];
     this.buttonsKeybinds = [];
     this.initButtons();
+    this.changeKeys = true;
   }
 
   initButtons() {
@@ -32,7 +33,7 @@ class Menu {
         "AUDIO",
         this.font
       ),
-      new ButtonText((width / 6) * 1.6, height / 2, 35, "KEY-BINDS", this.font),
+      new ButtonText((width / 6) * 1.6, height / 2, 35, "KEYBINDS", this.font),
       new ButtonText(
         (width / 6) * 1.6,
         height / 2 + (height / 2 - height / 3) - 50,
@@ -67,13 +68,19 @@ class Menu {
 
       new ButtonImg((width / 6) * 3.5, (height / 4) * 3, 40, 40, ""),
     ];
-
     this.buttonsKeybinds = [
       new ButtonText(
         (width / 6) * 3.5,
         height / 2 + (height / 2 - height / 3) - 150,
         64,
         "WAD",
+        this.font
+      ),
+      new ButtonText(
+        (width / 6) * 3.5,
+        height / 2 + (height / 2 - height / 3),
+        64,
+        "ARROWS",
         this.font
       ),
     ];
@@ -157,9 +164,10 @@ class Menu {
     text("KEYBINDS", (width / 6) * 3.55, (height / 4) * 1.2);
 
     for (let button of this.buttonsKeybinds) {
-      // Use this.buttonsKeybinds
       button.display();
     }
+
+    // Display dynamic keybinding information
   }
 
   displayVisualSettings() {
@@ -208,15 +216,17 @@ class Menu {
       this.menuSelected = 2; // Visual
     }
 
-    // Audio settings
-    if (this.menuSelected === 0) {
-      if (this.buttonsAudio[0].isPressed(mx, my)) {
-        this.volume = max(0, this.volume - 1); // Decrease volume
-      } else if (this.buttonsAudio[1].isPressed(mx, my)) {
-        this.volume = min(9, this.volume + 1); // Increase volume
-      } else if (this.buttonsAudio[2].isPressed(mx, my)) {
-        this.narrationState = !this.narrationState; // Toggle narration
+    // Keybinds settings interaction
+    if (this.menuSelected === 1) {
+      if (this.buttonsKeybinds[0].isPressed(mx, my)) {
+        this.changeKeys = false;
+      } else if (this.buttonsKeybinds[1].isPressed(mx, my)) {
+        this.changeKeys = true;
       }
     }
+  }
+
+  getChangeKeys() {
+    return this.changeKeys;
   }
 }
