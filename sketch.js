@@ -190,33 +190,35 @@ function draw() {
   }
 }
 
-//add key input interaction
+// Key input interaction when a key is pressed
 function keyPressed() {
-  if (keyCode === LEFT_ARROW && arrowL.isPressed) {
-    leftArrowPressed = true;
-    arrowL.setPressed(false);
-  }
-  if (keyCode === UP_ARROW && arrowUP.isPressed) {
-    upArrowPressed = true;
-    arrowUP.setPressed(false);
-  }
-  if (keyCode === RIGHT_ARROW && arrowR.isPressed) {
-    rightArrowPressed = true;
-    arrowR.setPressed(false);
+  console.log(`Key pressed: ${key}`);
+  if (!credits && !settings) {
+    const changeKeys = menu.getChangeKeys();
+    if (changeKeys) {
+      if (keyCode === LEFT_ARROW) arrowL.setPressed(false);
+      if (keyCode === UP_ARROW) arrowUP.setPressed(false);
+      if (keyCode === RIGHT_ARROW) arrowR.setPressed(false);
+    } else {
+      if (key.toUpperCase() === "A") arrowL.setPressed(false);
+      if (key.toUpperCase() === "W") arrowUP.setPressed(false);
+      if (key.toUpperCase() === "D") arrowR.setPressed(false);
+    }
   }
 }
 
-//when the key is released start experience
 function keyReleased() {
-  if (credits == false && settings == false) {
-    if (keyCode === LEFT_ARROW) {
-      arrowL.setPressed(true);
-    }
-    if (keyCode === UP_ARROW) {
-      arrowUP.setPressed(true);
-    }
-    if (keyCode === RIGHT_ARROW) {
-      arrowR.setPressed(true);
+  console.log(`Key released: ${key}`);
+  if (!credits && !settings) {
+    const changeKeys = menu.getChangeKeys();
+    if (changeKeys) {
+      if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
+      if (keyCode === UP_ARROW) arrowUP.setPressed(true);
+      if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
+    } else {
+      if (key.toUpperCase() === "A") arrowL.setPressed(true);
+      if (key.toUpperCase() === "W") arrowUP.setPressed(true);
+      if (key.toUpperCase() === "D") arrowR.setPressed(true);
     }
   }
 }

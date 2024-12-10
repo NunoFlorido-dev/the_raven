@@ -243,8 +243,10 @@ class Menu {
     if (this.menuSelected === 1) {
       if (this.buttonsKeybinds[0].isPressed(mx, my)) {
         this.changeKeys = false;
+        console.log(this.changeKeys);
       } else if (this.buttonsKeybinds[1].isPressed(mx, my)) {
         this.changeKeys = true;
+        console.log(this.changeKeys);
       }
     }
   }
