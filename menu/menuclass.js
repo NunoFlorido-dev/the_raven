@@ -227,12 +227,26 @@ class Menu {
       this.menuSelected = 2; // Visual
     }
 
+    if (this.menuSelected === 0) {
+      if (this.buttonsAudio[0].isPressed(mx, my)) {
+        if (this.volume > 0) this.volume -= 1;
+        this.volume = max(0, this.volume - 1); // Decrease volume
+      } else if (this.buttonsAudio[1].isPressed(mx, my)) {
+        if (this.volume < 9) this.volume += 1;
+        this.volume = min(9, this.volume + 1); // Increase volume
+      } else if (this.buttonsAudio[2].isPressed(mx, my)) {
+        this.narrationState = !this.narrationState;
+      }
+    }
+
     // Keybinds settings interaction
     if (this.menuSelected === 1) {
       if (this.buttonsKeybinds[0].isPressed(mx, my)) {
         this.changeKeys = false;
+        console.log(this.changeKeys);
       } else if (this.buttonsKeybinds[1].isPressed(mx, my)) {
         this.changeKeys = true;
+        console.log(this.changeKeys);
       }
     }
   }
