@@ -40,6 +40,13 @@ class Menu {
         "VISUAL",
         this.font
       ),
+      new ButtonText(
+        (width / 6) * 1.2,
+        height / 2 - 260,
+        24,
+        "CONTINUE",
+        this.font
+      ),
     ];
 
     this.buttonsAudio = [
@@ -85,8 +92,12 @@ class Menu {
   }
 
   displaySettings() {
+    // Create a semi-transparent overlay to obscure background elements
+
+    // Draw the menu box
     fill(this.menuColor);
     rect(width / 8, height / 8, (width / 8) * 6, (height / 8) * 6);
+
     for (let button of this.buttonsSettings) {
       button.display();
     }
@@ -158,35 +169,53 @@ class Menu {
   }
 
   handleMouseClick(mx, my) {
+    // Check if settings button is clicked
     if (this.buttons[0].isPressed(mx, my)) {
-      this.credits = false;
-      this.settings = !this.settings;
-    } else if (this.buttons[1].isPressed(mx, my)) {
-      this.settings = false;
-      this.credits = !this.credits;
+      paused = !paused; // Toggle paused state
+      this.settings = paused; // If paused, show settings
+      this.credits = false; // Hide credits
+      return; // Exit after handling the button
     }
 
+    // Check if credits button is clicked
+    if (this.buttons[1].isPressed(mx, my)) {
+      paused = !paused; // Toggle paused state
+      this.credits = paused; // If paused, show credits
+      this.settings = false; // Hide settings
+      return; // Exit after handling the button
+    }
+
+    // If settings are active, handle clicks in settings
     if (this.settings) {
       this.handleSettingsClick(mx, my);
     }
   }
 
   handleSettingsClick(mx, my) {
-    if (this.buttonsSettings[0].isPressed(mx, my)) {
-      this.menuSelected = 0;
-    } else if (this.buttonsSettings[1].isPressed(mx, my)) {
-      this.menuSelected = 1;
-    } else if (this.buttonsSettings[2].isPressed(mx, my)) {
-      this.menuSelected = 2;
+    // Check if "Continue" button is pressed
+    if (this.buttonsSettings[3].isPressed(mx, my)) {
+      paused = false; // Resume the game
+      this.settings = false; // Close settings menu
+      return; // Exit after handling the button
     }
 
+    // Handle settings menu navigation
+    if (this.buttonsSettings[0].isPressed(mx, my)) {
+      this.menuSelected = 0; // Audio
+    } else if (this.buttonsSettings[1].isPressed(mx, my)) {
+      this.menuSelected = 1; // Keybinds
+    } else if (this.buttonsSettings[2].isPressed(mx, my)) {
+      this.menuSelected = 2; // Visual
+    }
+
+    // Audio settings
     if (this.menuSelected === 0) {
       if (this.buttonsAudio[0].isPressed(mx, my)) {
-        if (this.volume > 0) this.volume -= 1;
+        this.volume = max(0, this.volume - 1); // Decrease volume
       } else if (this.buttonsAudio[1].isPressed(mx, my)) {
-        if (this.volume < 9) this.volume += 1;
+        this.volume = min(9, this.volume + 1); // Increase volume
       } else if (this.buttonsAudio[2].isPressed(mx, my)) {
-        this.narrationState = !this.narrationState;
+        this.narrationState = !this.narrationState; // Toggle narration
       }
     }
   }

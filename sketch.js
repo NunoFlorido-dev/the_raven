@@ -1,4 +1,5 @@
 let font; //load font
+let paused = false;
 
 let menu; //load menu
 
@@ -175,11 +176,12 @@ function draw() {
     buttons[i].display();
   }
 
-  menu.display();
-
   if (leftArrowPressed && upArrowPressed && rightArrowPressed) {
     startExperience = true;
     window.location.href = "../experience/experience.html"; // Navigate to the experience
+  }
+  if (paused) {
+    menu.display();
   }
 }
 
@@ -203,13 +205,13 @@ function keyPressed() {
 function keyReleased() {
   if (credits == false && settings == false) {
     if (keyCode === LEFT_ARROW) {
-      leftArrowPressed = false;
+      arrowL.setPressed(true);
     }
     if (keyCode === UP_ARROW) {
-      upArrowPressed = false;
+      arrowUP.setPressed(true);
     }
     if (keyCode === RIGHT_ARROW) {
-      rightArrowPressed = false;
+      arrowR.setPressed(true);
     }
   }
 }

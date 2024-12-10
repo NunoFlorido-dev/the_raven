@@ -1,6 +1,6 @@
 let font; //load font
-
 let menu;
+let paused = false;
 
 //create arrows
 let arrowL;
@@ -119,6 +119,9 @@ function setup() {
   //text
   subtitleSize = 48;
   textAlign(CENTER);
+
+  menuColor = color(180);
+  menuColor.setAlpha(240);
 }
 
 //function to display subtitles (receives string as input)
@@ -134,30 +137,33 @@ function draw() {
 
   subtitleX = width / 4; //x of subtitle
   subtitleY = height - 100; //y of subtitle
-  displaySubtitle("BAZA AAC"); //add subtitle to canvas
 
-  buttondefs.display();
-  buttoncredits.display();
+  if (!paused) {
+    displaySubtitle("BAZA AAC"); //add subtitle to canvas
 
-  for (let i = pointers.length - 1; i >= 0; i--) {
-    if (pointers[i].die()) {
-      pointers.splice(i, 1); // Remove pointer if it is pressed on
-    } else {
-      pointers[i].move(); //move pointer
-      pointers[i].display(); //display pointer
-      if (pointers[i].y >= height) {
-        if (pointers.length >= 0) {
-          pointers.splice(i, 1); //if the pointer exceeds the margin and isn't pressed, delete it
+    buttondefs.display();
+    buttoncredits.display();
+
+    for (let i = pointers.length - 1; i >= 0; i--) {
+      if (pointers[i].die()) {
+        pointers.splice(i, 1); // Remove pointer if it is pressed on
+      } else {
+        pointers[i].move(); //move pointer
+        pointers[i].display(); //display pointer
+        if (pointers[i].y >= height) {
+          if (pointers.length >= 0) {
+            pointers.splice(i, 1); //if the pointer exceeds the margin and isn't pressed, delete it
+          }
         }
       }
     }
-  }
 
-  for (let i = 0; i < arrows.length; i++) {
-    arrows[i].display(); //display arrows
+    for (let i = 0; i < arrows.length; i++) {
+      arrows[i].display(); //display arrows
+    }
+  } else {
+    menu.display();
   }
-
-  menu.display();
 }
 
 //function to handle interaction
