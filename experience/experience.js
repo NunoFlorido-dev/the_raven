@@ -62,7 +62,7 @@ let rightArrowPressed = false;
 let startExperience = false;
 
 let fft; // FFT object for beat detection
-let beatThreshold = 145; // Energy threshold for beat detection
+let beatThreshold = 225; // Energy threshold for beat detection
 
 let pointer = [];
 let pointerSpeed = 5; // Default pointer speed
@@ -361,6 +361,7 @@ function draw() {
   } else {
     // Display pause menu and stop other interactions
     menu.display(); // Show menu options
+    stopMusic(currentParagraphIndex);
   }
 
   menu.hover();

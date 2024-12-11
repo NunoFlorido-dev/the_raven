@@ -373,6 +373,7 @@ class Menu {
 
     if (this.buttonsSettings[3].isPressed(mx, my)) {
       window.location.href = "../index.html"; // Redirect to index.html
+      resumeMusic(currentParagraphIndex);
     }
 
     // Handle settings menu navigation

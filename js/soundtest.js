@@ -25,3 +25,11 @@ function playMusic(currentP) {
     console.warn("Sound not ready or invalid index: " + currentP);
   }
 }
+
+function stopMusic(currentP) {
+  E[currentP].stop();
+}
+
+function resumeMusic(currentP) {
+  E[currentP].play();
+}
