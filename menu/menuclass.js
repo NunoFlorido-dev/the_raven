@@ -44,14 +44,14 @@ class Menu {
       ),*/
       new ButtonText(
         (width / 6) * 1.6,
-        height / 2 + 220,
+        height / 2 + 180,
         24,
         "CONTINUE",
         this.font
       ),
       new ButtonText(
         (width / 6) * 1.6,
-        height / 2 + 180,
+        height / 2 + 220,
         24,
         "RETURN TO HOMEPAGE",
         this.font
