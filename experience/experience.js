@@ -369,28 +369,24 @@ function draw() {
   buttondefs.display(); // Always show the settings button
 
   // Check for beats and spawn pointers
-  if (detectBeat()) {
-    spawnPointer();
-    updatePointerSpeeds(); // Adjust speed dynamically
+}
+
+// Update and display pointers
+for (let i = pointer.length - 1; i >= 0; i--) {
+  let pointer = pointer[i];
+  pointer.y += pointerSpeed; // Move down dynamically
+  pointer.move();
+  pointer.display();
+
+  // Remove pointer if it goes off-screen
+  if (pointer.y > height + pointer.size) {
+    pointer.splice(i, 1);
   }
+}
 
-  // Update and display pointers
-  for (let i = pointer.length - 1; i >= 0; i--) {
-    let pointer = pointer[i];
-    pointer.y += pointerSpeed; // Move down dynamically
-
-    pointer.display();
-
-    // Remove pointer if it goes off-screen
-    if (pointer.y > height + pointer.size) {
-      pointer.splice(i, 1);
-    }
-  }
-
-  // Display arrows
-  for (let i = 0; i < arrows.length; i++) {
-    arrows[i].display();
-  }
+// Display arrows
+for (let i = 0; i < arrows.length; i++) {
+  arrows[i].display();
 }
 
 function handleInteraction(centerX, arrow) {
