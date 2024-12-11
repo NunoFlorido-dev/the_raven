@@ -223,7 +223,7 @@ function preloadPointers(center) {
   if (type == 2) img = loadImage("../assets/icons/arrowR.png");
 
   let pointer = new Pointer(x, -70, 70, img); // Pointer starts above the screen
-  pointer.push(pointer);
+  pointers.push(pointer);
 }
 
 let syllableArrays = [];
@@ -245,7 +245,6 @@ function setup() {
   preloadPointers((width / 4) * 3 - 30);
   preloadButtons();
   fft = new p5.FFT();
-  song.loop(); // Start the song loop
 
   menu = new Menu(font);
 
@@ -291,27 +290,6 @@ function updatePointerSpeeds() {
   let beatInterval = 0.5; // Time in seconds between beats, adjust for your song's tempo
 
   pointerSpeed = distance / (beatInterval * frameRate());
-}
-
-function displaySyllable(paragraphIndex, wordIndex, syllableIndex) {
-  if (paragraphIndex < syllableArrays.length) {
-    const paragraph = syllableArrays[paragraphIndex]; // Get syllables for the paragraph
-    if (wordIndex < paragraph.length) {
-      const word = paragraph[wordIndex]; // Get syllables for the word
-      if (syllableIndex < word.length) {
-        fill(0);
-        textFont(font);
-        textSize(subtitleSize);
-        text(word[syllableIndex], subtitleX, subtitleY); // Display the syllable
-      } else {
-        console.log("No more syllables in this word.");
-      }
-    } else {
-      console.log("No more words in this paragraph.");
-    }
-  } else {
-    console.log("No more paragraphs.");
-  }
 }
 
 function displayCurrentParagraph(paragraphIndex) {
