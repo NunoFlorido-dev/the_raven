@@ -341,7 +341,9 @@ function displayWord(paragraphIndex, wordIndex) {
   }
 }
 function draw() {
-  background(250);
+  background(255);
+
+  showIllustrations(currentParagraphIndex, width / 2 - 300, height / 2 - 50);
 
   // Regular updates when not paused
   subtitleX = width / 4; // x of subtitle

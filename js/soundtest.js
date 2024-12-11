@@ -37,6 +37,13 @@ function playMusic(currentP) {
   }
 }
 
+function showIllustrations(currentP, x, y, w, h) {
+  imageMode(CENTER);
+  if (il[currentP]) {
+    image(il[currentP], x, y, il[currentP].width, il[currentP].height);
+  }
+}
+
 function stopMusic(currentP) {
   E[currentP].stop();
 }
