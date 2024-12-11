@@ -1,4 +1,4 @@
-let font;
+let font; //load font
 
 // Arrows
 let arrowL, arrowUP, arrowR;
@@ -8,12 +8,7 @@ let arrows = [];
 let subtitleX, subtitleY, subtitleSize;
 let marginBotY;
 
-// Pointers
-let pointers = [];
-
-// Beat detection
-let switcher = false; // Trigger for beat detection (updated by detectBeat)
-
+//function to load font
 function preloadFont() {
   font = loadFont("../assets/font/TheRaven-Regular.ttf");
 }
@@ -63,16 +58,58 @@ function preloadArrows(center) {
   arrows = [arrowL, arrowUP, arrowR];
 }
 
-function preload() {
-  preloadFont();
-  loadMusic(); // Load the music from soundtest.js
+//create array with pointers
+let pointers = [];
+
+//test function to preload pointers
+function preloadPointers(center) {
+  let posX = [];
+  posX[0] = center - 100;
+  posX[1] = center;
+  posX[2] = center + 100;
+
+  for (let i = 0; i < 10; i++) {
+    let type = int(random(0, 3));
+    let randomPos = posX[type];
+    let colorP;
+
+    let x = randomPos;
+    let y = int(random(-500, 300));
+
+    if (type == 0) {
+      colorP = color(255, 0, 0);
+    } else if (type == 1) {
+      colorP = color(0, 255, 0);
+    } else if (type == 2) {
+      colorP = color(0, 0, 255);
+    }
+
+    pointers.push(new Pointer(x, y, 48, colorP));
+  }
 }
 
+function preload() {
+  loadMusic();
+}
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  marginBotY = height - 118; //place for arrows
+  preloadFont(); //preload font
+  preloadArrows((width / 4) * 3); //preload arrows
+  preloadPointers((width / 4) * 3); //preload pointers
+
+  //text
+  subtitleSize = 48;
+  textAlign(CENTER);
+}
+
+//function to display subtitles (receives string as input)
 function displaySubtitle(subtitle) {
   fill(0);
   textFont(font);
-  textSize(subtitleSize);
-  text(subtitle, subtitleX, subtitleY);
+  textSize(subtitleSize - 12);
+  text("E" + (paragraphIndex + 1), width - 50, 47.5);
 }
 
 function setup() {
@@ -94,33 +131,28 @@ function setup() {
 }
 
 function draw() {
-  background(220);
+  background(250);
 
-  // Display subtitle
-  subtitleX = width / 4;
-  subtitleY = height - 100;
-  displaySubtitle("BAZA AAC");
+  subtitleX = width / 4; //x of subtitle
+  subtitleY = height - 100; //y of subtitle
+  displaySubtitle("BAZA AAC"); //add subtitle to canvas
 
-  detectBeat(); // No need to pass switcher as argument
-
-  if (switcher) {
-    spawnPointer();
-    switcher = false; // Reset switcher after spawning
-  }
-
-  // Handle pointers
   for (let i = pointers.length - 1; i >= 0; i--) {
-    if (pointers[i].die() || pointers[i].y >= height) {
-      pointers.splice(i, 1); // Remove dead or out-of-bounds pointers
+    if (pointers[i].die()) {
+      pointers.splice(i, 1); // Remove pointer if it is pressed on
     } else {
-      pointers[i].move();
-      pointers[i].display();
+      pointers[i].move(); //move pointer
+      pointers[i].display(); //display pointer
+      if (pointers[i].y >= height) {
+        if (pointers.length >= 0) {
+          pointers.splice(i, 1); //if the pointer exceeds the margin and isn't pressed, delete it
+        }
+      }
     }
   }
 
-  // Display arrows
-  for (let arrow of arrows) {
-    arrow.display();
+  for (let i = 0; i < arrows.length; i++) {
+    arrows[i].display(); //display arrows
   }
 }
 
@@ -138,24 +170,109 @@ function keyPressed() {
   let centerL = center - 100;
   let centerR = center + 100;
 
-  if (keyCode === LEFT_ARROW && arrowL.isPressed) {
-    arrowL.setPressed(false);
-    handleInteraction(centerL, arrowL);
+  if (!credits && !settings) {
+    const changeKeys = menu.getChangeKeys();
+    if (changeKeys) {
+      // Using arrow keys
+      if (keyCode === LEFT_ARROW) {
+        handleInteraction(centerL, arrowL);
+        arrowL.setPressed(false);
+        leftArrowPressed = true;
+      }
+      if (keyCode === UP_ARROW) {
+        handleInteraction(center, arrowUP);
+        arrowUP.setPressed(false);
+        upArrowPressed = true;
+      }
+      if (keyCode === RIGHT_ARROW) {
+        handleInteraction(centerR, arrowR);
+        arrowR.setPressed(false);
+        rightArrowPressed = true;
+      }
+    } else {
+      // Using WAD keys
+      if (key.toUpperCase() === "A") {
+        handleInteraction(centerL, arrowL);
+        arrowL.setPressed(false);
+        leftArrowPressed = true;
+      }
+      if (key.toUpperCase() === "W") {
+        handleInteraction(center, arrowUP);
+        arrowUP.setPressed(false);
+        upArrowPressed = true;
+      }
+      if (key.toUpperCase() === "D") {
+        handleInteraction(centerR, arrowR);
+        arrowR.setPressed(false);
+        rightArrowPressed = true;
+      }
+    }
   }
-  if (keyCode === UP_ARROW && arrowUP.isPressed) {
-    arrowUP.setPressed(false);
-    handleInteraction(center, arrowUP);
-  }
-  if (keyCode === RIGHT_ARROW && arrowR.isPressed) {
-    arrowR.setPressed(false);
-    handleInteraction(centerR, arrowR);
+
+  if (key === " ") {
+    playMusic();
   }
 }
 
 function keyReleased() {
-  if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
-  if (keyCode === UP_ARROW) arrowUP.setPressed(true);
-  if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
+  if (!credits && !settings) {
+    const changeKeys = menu.getChangeKeys();
+    if (changeKeys) {
+      if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
+      if (keyCode === UP_ARROW) arrowUP.setPressed(true);
+      if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
+    } else {
+      if (key.toUpperCase() === "A") arrowL.setPressed(true);
+      if (key.toUpperCase() === "W") arrowUP.setPressed(true);
+      if (key.toUpperCase() === "D") arrowR.setPressed(true);
+    }
+  }
+}
+
+//handle syllable bounds
+function handleSyllableBounds(forward) {
+  const paragraph = syllableArrays[currentParagraphIndex];
+  const word = paragraph[currentWordIndex];
+
+  if (forward) {
+    if (currentSyllableIndex >= word.length) {
+      currentSyllableIndex = 0;
+      currentWordIndex++;
+
+      if (currentWordIndex >= paragraph.length) {
+        currentWordIndex = 0;
+        currentParagraphIndex++;
+
+        if (currentParagraphIndex >= syllableArrays.length) {
+          currentParagraphIndex = syllableArrays.length - 1; // Limit to last paragraph
+          console.log("Reached the end of the poem.");
+        }
+      }
+    }
+  } else {
+    if (currentSyllableIndex < 0) {
+      currentWordIndex--;
+
+      if (currentWordIndex < 0) {
+        currentParagraphIndex--;
+
+        if (currentParagraphIndex < 0) {
+          currentParagraphIndex = 0; // Limit to first paragraph
+          console.log("Reached the beginning of the poem.");
+        } else {
+          const prevParagraph = syllableArrays[currentParagraphIndex];
+          currentWordIndex = prevParagraph.length - 1;
+        }
+      }
+
+      const prevWord = paragraph[currentWordIndex];
+      currentSyllableIndex = prevWord.length - 1;
+    }
+  }
+}
+
+function mouseReleased() {
+  menu.handleMouseClick(mouseX, mouseY);
 }
 
 // Spawn a pointer at a random position based on beat
