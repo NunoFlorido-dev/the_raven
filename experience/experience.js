@@ -20,6 +20,7 @@ function preloadFont() {
 let currentParagraphIndex = 0;
 let currentWordIndex = 0;
 let currentSyllableIndex = 0;
+let poem_paragraphs = [];
 
 //create arrows
 let arrowL;
@@ -81,7 +82,7 @@ function preloadButtons() {
     (width / 6) * 1.6,
     height / 2,
     35,
-    "KEY-BINDS",
+    "KEYBINDS",
     font
   );
   visual = new ButtonText(
@@ -203,7 +204,6 @@ function preloadPointers(center) {
   }
 }
 
-let poem_paragraphs = [];
 let syllableArrays = [];
 
 function preload() {
@@ -213,7 +213,7 @@ function preload() {
 }
 
 function loadPoem() {
-  poem = loadStrings("../assets/poem_file/theraven_formatted.txt");
+  poem = loadStrings("../assets/poem_file/theRaven_words.txt");
 }
 
 function setup() {
@@ -227,14 +227,22 @@ function setup() {
 
   // Process poem only when it is fully loaded
   if (poem) {
-    let fullText = poem.join("\n"); // Join the lines into full text
-    poem_paragraphs = fullText.split("\n\n"); // Split into paragraphs
-    syllableArrays = getSyllablesFromParagraphs();
-    print(syllableArrays);
+    let fullText = poem.join("\n"); // Join lines into full text
+    let paragraphs = fullText.split("\n\n"); // Split by double newline to get paragraphs
+
+    // For each paragraph, remove \n, split into words, and remove empty strings
+    poem_paragraphs = paragraphs.map((paragraph) =>
+      paragraph
+        .replace(/\n/g, "")
+        .split("+")
+        .filter((word) => word.trim() !== "")
+    );
+
+    console.log(poem_paragraphs); // Verify structure
   }
 
   subtitleSize = 48;
-  textAlign(CENTER);
+  textAlign(CENTER, BASELINE); // Ensure baseline alignment
 }
 
 function displaySyllable(paragraphIndex, wordIndex, syllableIndex) {
@@ -265,6 +273,26 @@ function displayCurrentParagraph(paragraphIndex) {
   text("E" + (paragraphIndex + 1), width - 50, 47.5);
 }
 
+function displayWord(paragraphIndex, wordIndex) {
+  if (paragraphIndex < poem_paragraphs.length) {
+    let paragraph = poem_paragraphs[paragraphIndex];
+    if (wordIndex < paragraph.length) {
+      let word = paragraph[wordIndex];
+      fill(0);
+      textFont(font);
+      textSize(subtitleSize);
+
+      // Reset the subtitle position for consistent vertical alignment
+      subtitleY = height - 100; // Adjust this value if necessary
+
+      text(word, subtitleX, subtitleY); // Display the word
+    } else {
+      console.log("No more words in this paragraph.");
+    }
+  } else {
+    console.log("No more paragraphs.");
+  }
+}
 function draw() {
   background(250);
 
@@ -272,13 +300,8 @@ function draw() {
   subtitleX = width / 4; // x of subtitle
   subtitleY = height - 100; // y of subtitle
 
-  displaySyllable(
-    currentParagraphIndex,
-    currentWordIndex,
-    currentSyllableIndex
-  );
-
   displayCurrentParagraph(currentParagraphIndex);
+  displayWord(currentParagraphIndex, currentWordIndex);
 
   if (!paused) {
     // Handle pointer interactions
@@ -377,30 +400,15 @@ function keyPressed() {
   }
 
   if (key === "e") {
-    // Move forward in syllables, then words, then paragraphs
-    currentSyllableIndex++;
-    handleSyllableBounds(true);
+    // Move forward in words, then paragraphs
+    currentWordIndex++;
+    handleBounds(true);
   }
 
   if (key === "q") {
-    // Move backward in syllables, then words, then paragraphs
-    if (currentSyllableIndex > 0) {
-      currentSyllableIndex--;
-    } else if (currentWordIndex > 0) {
-      // If syllable index is 0, go to previous word
-      currentWordIndex--;
-      currentSyllableIndex =
-        syllableArrays[currentParagraphIndex][currentWordIndex].length - 1; // Set syllable index to last syllable of the previous word
-    } else if (currentParagraphIndex > 0) {
-      // If word index is 0, go to previous paragraph
-      currentParagraphIndex--;
-      const prevParagraph = syllableArrays[currentParagraphIndex];
-      currentWordIndex = prevParagraph.length - 1; // Set to last word of the previous paragraph
-      currentSyllableIndex =
-        syllableArrays[currentParagraphIndex][currentWordIndex].length - 1; // Set to last syllable of the last word
-    }
-
-    handleSyllableBounds(false); // Ensure bounds are handled after moving
+    // Move backward in words, then paragraphs
+    currentWordIndex--;
+    handleBounds(false);
   }
 }
 
@@ -420,44 +428,26 @@ function keyReleased() {
   }
 }
 
-//handle syllable bounds
-function handleSyllableBounds(forward) {
-  const paragraph = syllableArrays[currentParagraphIndex];
-  const word = paragraph[currentWordIndex];
-
+// Handle navigation bounds
+function handleBounds(forward) {
   if (forward) {
-    if (currentSyllableIndex >= word.length) {
-      currentSyllableIndex = 0;
-      currentWordIndex++;
-
-      if (currentWordIndex >= paragraph.length) {
-        currentWordIndex = 0;
-        currentParagraphIndex++;
-
-        if (currentParagraphIndex >= syllableArrays.length) {
-          currentParagraphIndex = syllableArrays.length - 1; // Limit to last paragraph
-          console.log("Reached the end of the poem.");
-        }
+    if (currentWordIndex >= poem_paragraphs[currentParagraphIndex].length) {
+      currentWordIndex = 0;
+      currentParagraphIndex++;
+      if (currentParagraphIndex >= poem_paragraphs.length) {
+        currentParagraphIndex = poem_paragraphs.length - 1; // Limit to last paragraph
+        console.log("Reached the end of the poem.");
       }
     }
   } else {
-    if (currentSyllableIndex < 0) {
-      currentWordIndex--;
-
-      if (currentWordIndex < 0) {
-        currentParagraphIndex--;
-
-        if (currentParagraphIndex < 0) {
-          currentParagraphIndex = 0; // Limit to first paragraph
-          console.log("Reached the beginning of the poem.");
-        } else {
-          const prevParagraph = syllableArrays[currentParagraphIndex];
-          currentWordIndex = prevParagraph.length - 1;
-        }
+    if (currentWordIndex < 0) {
+      currentParagraphIndex--;
+      if (currentParagraphIndex < 0) {
+        currentParagraphIndex = 0; // Limit to first paragraph
+        console.log("Reached the beginning of the poem.");
+      } else {
+        currentWordIndex = poem_paragraphs[currentParagraphIndex].length - 1; // Go to the last word of the previous paragraph
       }
-
-      const prevWord = paragraph[currentWordIndex];
-      currentSyllableIndex = prevWord.length - 1;
     }
   }
 }
