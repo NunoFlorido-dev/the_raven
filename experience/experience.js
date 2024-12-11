@@ -243,6 +243,8 @@ function setup() {
 
   subtitleSize = 48;
   textAlign(CENTER, BASELINE); // Ensure baseline alignment
+
+  playMusic(currentParagraphIndex);
 }
 
 function displaySyllable(paragraphIndex, wordIndex, syllableIndex) {
@@ -395,10 +397,6 @@ function keyPressed() {
     }
   }
 
-  if (key === " ") {
-    playMusic();
-  }
-
   if (key === "e") {
     // Move forward in words, then paragraphs
     currentWordIndex++;
@@ -415,7 +413,7 @@ function keyPressed() {
 //same interaction but when the key is released
 function keyReleased() {
   if (!credits && !settings) {
-    const changeKeys = menu.getChangeKeys();
+    let changeKeys = menu.getChangeKeys();
     if (changeKeys) {
       if (keyCode === LEFT_ARROW) arrowL.setPressed(false);
       if (keyCode === UP_ARROW) arrowUP.setPressed(false);
@@ -428,7 +426,6 @@ function keyReleased() {
   }
 }
 
-// Handle navigation bounds
 function handleBounds(forward) {
   if (forward) {
     if (currentWordIndex >= poem_paragraphs[currentParagraphIndex].length) {
@@ -437,6 +434,9 @@ function handleBounds(forward) {
       if (currentParagraphIndex >= poem_paragraphs.length) {
         currentParagraphIndex = poem_paragraphs.length - 1; // Limit to last paragraph
         console.log("Reached the end of the poem.");
+      } else {
+        playMusic(currentParagraphIndex); // Play music for the new paragraph
+        displayCurrentTrack(currentParagraphIndex); // Display track info
       }
     }
   } else {
@@ -447,6 +447,8 @@ function handleBounds(forward) {
         console.log("Reached the beginning of the poem.");
       } else {
         currentWordIndex = poem_paragraphs[currentParagraphIndex].length - 1; // Go to the last word of the previous paragraph
+        playMusic(currentParagraphIndex); // Play music for the previous paragraph
+        displayCurrentTrack(currentParagraphIndex); // Display track info
       }
     }
   }
