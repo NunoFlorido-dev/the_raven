@@ -244,6 +244,7 @@ function preload() {
   loadPoem(); // This starts loading the poem
   preloadFont(); // This loads the font
   loadMusic(); // Load other assets if needed
+  loadIllustrations();
 }
 
 function loadPoem() {

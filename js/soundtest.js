@@ -1,12 +1,23 @@
 let song = [];
 
 let E = []; // Create an array to store the sound objects
+let il = [];
 
 function loadMusic() {
   for (let i = 0; i < 18; i++) {
-    E[i] = loadSound(
+    il[i] = loadSound(
       "../assets/music/E" + (i + 1) + ".mp3",
       () => console.log("Sound " + (i + 1) + " loaded successfully"),
+      (err) => console.error("Failed to load sound " + (i + 1), err)
+    ); // Load each sound with success and error callbacks
+  }
+}
+
+function loadIllustrations() {
+  for (let i = 0; i < 18; i++) {
+    il[i] = loadImage(
+      "../assets/images/ilustracoes" + (i + 1) + ".png",
+      () => console.log("Image " + (i + 1) + " loaded successfully"),
       (err) => console.error("Failed to load sound " + (i + 1), err)
     ); // Load each sound with success and error callbacks
   }
