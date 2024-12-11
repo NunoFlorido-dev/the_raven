@@ -61,6 +61,12 @@ let upArrowPressed = false;
 let rightArrowPressed = false;
 let startExperience = false;
 
+let fft; // FFT object for beat detection
+let beatThreshold = 200; // Energy threshold for beat detection
+
+let pointer = [];
+let pointerSpeed = 5; // Default pointer speed
+
 function preloadButtons() {
   buttondefs = new ButtonImg(
     (width / 10) * 0.2,
@@ -178,7 +184,7 @@ function preloadArrows(center) {
 let pointers = [];
 
 //test function to preload pointers
-function preloadPointers(center) {
+/*function preloadPointers(center) {
   let posX = [];
   posX[0] = center - 100;
   posX[1] = center;
@@ -203,6 +209,22 @@ function preloadPointers(center) {
     pointers.push(new Pointer(x, y, 70, img));
   }
 }
+*/
+
+function preloadPointers(center) {
+  let posX = [center - 100, center, center + 100];
+  let type = int(random(0, 3)); // Random arrow type
+  let x = posX[type];
+  let img;
+
+  // Choose the arrow image
+  if (type == 0) img = loadImage("../assets/icons/arrowL.png");
+  if (type == 1) img = loadImage("../assets/icons/arrowUP.png");
+  if (type == 2) img = loadImage("../assets/icons/arrowR.png");
+
+  let pointer = new Pointer(x, -70, 70, img); // Pointer starts above the screen
+  pointer.push(pointer);
+}
 
 let syllableArrays = [];
 
@@ -222,6 +244,8 @@ function setup() {
   preloadArrows((width / 4) * 3 - 30);
   preloadPointers((width / 4) * 3 - 30);
   preloadButtons();
+  fft = new p5.FFT();
+  song.loop(); // Start the song loop
 
   menu = new Menu(font);
 
@@ -243,6 +267,28 @@ function setup() {
 
   subtitleSize = 48;
   textAlign(CENTER, BASELINE); // Ensure baseline alignment
+}
+
+function detectBeat() {
+  let spectrum = fft.analyze();
+  let energy = fft.getEnergy("lowMid"); // Get energy in the low-mid range for beat detection
+
+  if (energy > beatThreshold) {
+    return true; // Beat detected
+  }
+  return false;
+}
+
+function spawnPointer() {
+  preloadPointers((width / 4) * 3 - 30); // Use preloadPointers to spawn dynamically
+}
+
+function updatePointerSpeeds() {
+  // Adjust pointer speed so they reach marginBotY at the beat timing
+  let distance = marginBotY - -70; // Total distance the pointer travels
+  let beatInterval = 0.5; // Time in seconds between beats, adjust for your song's tempo
+
+  pointerSpeed = distance / (beatInterval * frameRate());
 }
 
 function displaySyllable(paragraphIndex, wordIndex, syllableIndex) {
@@ -332,6 +378,30 @@ function draw() {
   menu.hover();
 
   buttondefs.display(); // Always show the settings button
+
+  // Check for beats and spawn pointers
+  if (detectBeat()) {
+    spawnPointer();
+    updatePointerSpeeds(); // Adjust speed dynamically
+  }
+
+  // Update and display pointers
+  for (let i = pointer.length - 1; i >= 0; i--) {
+    let pointer = pointer[i];
+    pointer.y += pointerSpeed; // Move down dynamically
+
+    pointer.display();
+
+    // Remove pointer if it goes off-screen
+    if (pointer.y > height + pointer.size) {
+      pointer.splice(i, 1);
+    }
+  }
+
+  // Display arrows
+  for (let i = 0; i < arrows.length; i++) {
+    arrows[i].display();
+  }
 }
 
 function handleInteraction(centerX, arrow) {
