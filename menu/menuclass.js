@@ -161,6 +161,7 @@ class Menu {
   }
 
   displaySettings() {
+    noStroke();
     // Create a semi-transparent overlay to obscure background elements
 
     // Draw the menu box
@@ -198,6 +199,9 @@ class Menu {
   }
 
   displayAudioSettings() {
+    let sliderBegin = (width / 3) * 1.35;
+    let sliderW = (width / 4) * 1.15;
+
     fill(255);
     textSize(85);
     text("AUDIO", (width / 6) * 3.55, (height / 4) * 1.2);
@@ -206,11 +210,12 @@ class Menu {
     fill(255);
     textSize(40);
     text("VOLUME", (width / 6) * 3.55, (height / 2) * 0.95);
-    rect((width / 3) * 1.35, (height / 4) * 2.1, (width / 4) * 1.15, 20);
+    rect((width / 3) * 1.35, (height / 4) * 2.1, sliderW, 20);
 
     // Slider thumb
     let sliderX =
       (width / 3) * 1.325 + (((width / 4) * 1.15) / 9) * this.volume * 0.99;
+
     rect(sliderX, (height / 2) * 1.025, 40, 40);
 
     // Display volume control buttons
@@ -224,7 +229,10 @@ class Menu {
 
     // Narration state indicator
     if (this.narrationState) {
-      fill(255);
+      fill("#ffeb77");
+      rect((width / 6) * 3.525, (height / 4) * 3, 20, 20);
+    } else {
+      stroke(255);
       rect((width / 6) * 3.525, (height / 4) * 3, 20, 20);
     }
   }
