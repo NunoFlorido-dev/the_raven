@@ -5,7 +5,7 @@ class Menu {
     this.settingsImg = settingsImg; // Store the settings icon
     this.creditsImg = creditsImg; // Store the credits icon
     this.credits = false;
-    this.menuColor = color(180);
+    this.menuColor = color("#6cdbfd");
     this.menuColor.setAlpha(240);
     this.menuSelected = 0;
     this.volume = 0;
@@ -93,6 +93,60 @@ class Menu {
     ];
   }
 
+  hover() {
+    let isHoveringButton = false;
+
+    // Check if in settings
+    if (this.settings) {
+      // Hover effect for buttons in settings
+      for (let button of this.buttonsSettings) {
+        if (button.isPressed(mouseX, mouseY)) {
+          cursor(HAND); // Set cursor to pointer if hovered
+          isHoveringButton = true; // We are hovering over a button
+        }
+      }
+    }
+    // Check if in credits
+    else if (this.credits) {
+      // Hover effect for buttons in credits (if any)
+      for (let button of this.buttons) {
+        if (button.isPressed(mouseX, mouseY)) {
+          cursor(HAND); // Set cursor to pointer if hovered
+          isHoveringButton = true;
+        }
+      }
+    }
+    // Default menu buttons (if settings and credits are not active)
+    else {
+      for (let button of this.buttons) {
+        if (button.isPressed(mouseX, mouseY)) {
+          cursor(HAND); // Set cursor to pointer if hovered
+          isHoveringButton = true;
+        }
+      }
+    }
+
+    // Check buttons in settings (audio and keybinds)
+    for (let button of this.buttonsAudio) {
+      if (button.isPressed(mouseX, mouseY)) {
+        cursor(HAND); // Set cursor to pointer if hovered
+        isHoveringButton = true;
+      }
+    }
+
+    for (let button of this.buttonsKeybinds) {
+      if (button.isPressed(mouseX, mouseY)) {
+        cursor(HAND); // Set cursor to pointer if hovered
+        isHoveringButton = true;
+      }
+    }
+
+    // If not hovering over any button, set the cursor to default arrow
+    if (!isHoveringButton) {
+      cursor(ARROW); // Reset cursor to default arrow if not hovering over buttons
+    }
+  }
+
   display() {
     if (this.settings) {
       this.displaySettings();
@@ -112,8 +166,17 @@ class Menu {
     fill(this.menuColor);
     rect(width / 8, height / 8, (width / 8) * 6, (height / 8) * 6);
 
-    for (let button of this.buttonsSettings) {
-      button.display();
+    for (let i = 0; i < this.buttonsSettings.length; i++) {
+      // Check if this button is selected
+      if (this.menuSelected === i) {
+        fill("#ffeb77"); // Blue for selected button
+      } else {
+        fill(255); // White for unselected buttons
+      }
+
+      // Display each button
+      this.buttonsSettings[i].display();
+      print(this.menuSelected);
     }
 
     switch (this.menuSelected) {

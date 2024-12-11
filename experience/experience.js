@@ -134,9 +134,34 @@ function preloadArrows(center) {
   let arrowUPPress = loadImage("../assets/icons/arrowUPpress.png");
   let arrowRPress = loadImage("../assets/icons/arrowRpress.png");
 
-  arrowL = new Arrow(center - 100, marginBotY, 70, arrowLImg, arrowLPress);
-  arrowUP = new Arrow(center, marginBotY, 70, arrowUPImg, arrowUPPress);
-  arrowR = new Arrow(center + 100, marginBotY, 70, arrowRImg, arrowRPress);
+  let arrowLOutline = loadImage("../assets/icons/arrowL-outline.png");
+  let arrowUPOutline = loadImage("../assets/icons/arrowUP-outline.png");
+  let arrowROutline = loadImage("../assets/icons/arrowR-outline.png");
+
+  arrowL = new Arrow(
+    center - 100,
+    marginBotY,
+    70,
+    arrowLImg,
+    arrowLPress,
+    arrowLOutline
+  );
+  arrowUP = new Arrow(
+    center,
+    marginBotY,
+    70,
+    arrowUPImg,
+    arrowUPPress,
+    arrowUPOutline
+  );
+  arrowR = new Arrow(
+    center + 100,
+    marginBotY,
+    70,
+    arrowRImg,
+    arrowRPress,
+    arrowROutline
+  );
 
   arrows = [arrowL, arrowUP, arrowR];
 }
@@ -267,21 +292,31 @@ function draw() {
     noStroke();
     for (let i = 0; i < arrows.length; i++) {
       arrows[i].display();
+      arrows[i].fadeOutline(); // Gradually fade the outline
     }
   } else {
     // Display pause menu and stop other interactions
     menu.display(); // Show menu options
   }
 
+  menu.hover();
+
   buttondefs.display(); // Always show the settings button
 }
 
-//function to handle interaction
 function handleInteraction(centerX, arrow) {
+  let intersectionOccurred = false;
+
   for (let i = pointers.length - 1; i >= 0; i--) {
     if (pointers[i].intersect(arrow.x, arrow.y)) {
-      pointers[i].interact(arrow.x, arrow.y);
+      intersectionOccurred = true;
+      pointers[i].interact(arrow.x, arrow.y); // Process the interaction with the pointer
     }
+  }
+
+  // Trigger the fade-out effect
+  if (intersectionOccurred) {
+    arrow.setPressed(true); // Reset and show the outline
   }
 }
 

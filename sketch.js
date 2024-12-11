@@ -58,9 +58,34 @@ function preloadArrows(center) {
   let arrowUPPress = loadImage("../assets/icons/arrowUPpress.png");
   let arrowRPress = loadImage("../assets/icons/arrowRpress.png");
 
-  arrowL = new Arrow(center - 100, marginBotY, 70, arrowLImg, arrowLPress);
-  arrowUP = new Arrow(center, marginBotY, 70, arrowUPImg, arrowUPPress);
-  arrowR = new Arrow(center + 100, marginBotY, 70, arrowRImg, arrowRPress);
+  let arrowLOutline = loadImage("../assets/icons/arrowL-outline.png");
+  let arrowUPOutline = loadImage("../assets/icons/arrowUP-outline.png");
+  let arrowROutline = loadImage("../assets/icons/arrowR-outline.png");
+
+  arrowL = new Arrow(
+    center - 100,
+    marginBotY,
+    70,
+    arrowLImg,
+    arrowLPress,
+    arrowLOutline
+  );
+  arrowUP = new Arrow(
+    center,
+    marginBotY,
+    70,
+    arrowUPImg,
+    arrowUPPress,
+    arrowUPOutline
+  );
+  arrowR = new Arrow(
+    center + 100,
+    marginBotY,
+    70,
+    arrowRImg,
+    arrowRPress,
+    arrowROutline
+  );
 
   arrows = [arrowL, arrowUP, arrowR];
 }
