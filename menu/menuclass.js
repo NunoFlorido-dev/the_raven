@@ -15,6 +15,7 @@ class Menu {
     this.buttonsSettings = [];
     this.buttonsAudio = [];
     this.buttonsKeybinds = [];
+    this.buttonsCredits = [];
     this.initButtons();
     this.changeKeys = true;
   }
@@ -76,6 +77,7 @@ class Menu {
 
       new ButtonImg((width / 6) * 3.5, (height / 4) * 3, 40, 40, ""),
     ];
+
     this.buttonsKeybinds = [
       new ButtonText(
         (width / 6) * 3.5,
@@ -89,6 +91,16 @@ class Menu {
         height / 2 + (height / 2 - height / 3),
         64,
         "ARROWS",
+        this.font
+      ),
+    ];
+
+    this.buttonsCredits = [
+      new ButtonText(
+        width / 2 - 390,
+        height / 2 - 270,
+        24,
+        "RETURN",
         this.font
       ),
     ];
@@ -137,6 +149,13 @@ class Menu {
 
     for (let button of this.buttonsKeybinds) {
       if (button.isPressed(mouseX, mouseY)) {
+        cursor(HAND); // Set cursor to pointer if hovered
+        isHoveringButton = true;
+      }
+    }
+
+    if (mode === "homepage") {
+      if (this.buttonsCredits[0].isPressed(mouseX, mouseY)) {
         cursor(HAND); // Set cursor to pointer if hovered
         isHoveringButton = true;
       }
@@ -195,7 +214,59 @@ class Menu {
   }
 
   displayCredits() {
-    // Add your credits display logic here
+    let topText = height / 2 - 260;
+    fill(this.menuColor);
+    rect(width / 2 - 450, height / 2 - 300, 900, 600);
+
+    fill(255);
+    this.buttonsCredits[0].display();
+
+    fill(255);
+
+    textSize(20);
+
+    text("USE THE ARROW KEYS TO PLAY THE POEM", width / 2, topText);
+    text("THROUGH INTERACTING WITH THE MUSIC", width / 2, topText + 25);
+
+    text(
+      "YOU CAN TWEAK THE EXPERIENCE THROUGH THE SETTINGS",
+      width / 2,
+      topText + 75
+    );
+
+    text(
+      "A TRANSMEDIATION OF THE POEM" +
+        " " +
+        "THE RAVEN" +
+        " " +
+        "BY EDGAR ALLAN POE",
+      width / 2,
+      topText + 125
+    );
+
+    text("BY", width / 2, topText + 175);
+
+    text("CAROLINA CARDOSO", width / 2, topText + 205);
+    text("NUNO FLORIDO", width / 2, topText + 235);
+    text("CLARA CALOY", width / 2, topText + 265);
+
+    text(
+      "THIS PROJECT WAS MADE FOR THE CURRICULAR UNIT",
+      width / 2,
+      topText + 325
+    );
+
+    text("PROJECT 3 - MULTIMEDIA APPLICATIONS", width / 2, topText + 355);
+
+    text("WITH THE TUTORING OF", width / 2, topText + 405);
+    text("LUIS LUCAS PEREIRA", width / 2, topText + 435);
+    text("ANA BOAVIDA", width / 2, topText + 465);
+
+    text(
+      "DESIGN AND MULTIMEDIA - UNIVERSITY OF COIMBRA - 2024",
+      width / 2,
+      topText + 525
+    );
   }
 
   displayAudioSettings() {
@@ -283,6 +354,12 @@ class Menu {
     // If settings are active, handle clicks in settings
     if (this.settings) {
       this.handleSettingsClick(mx, my);
+    }
+
+    if (this.credits) {
+      if (this.buttonsCredits[0].isPressed(mx, my)) {
+        this.credits = false;
+      }
     }
   }
 

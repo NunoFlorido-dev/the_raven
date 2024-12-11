@@ -204,6 +204,8 @@ function draw() {
   if (paused) {
     menu.display();
   }
+
+  menu.hover();
 }
 
 function keyPressed() {

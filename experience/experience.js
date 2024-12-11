@@ -113,6 +113,13 @@ function preloadButtons() {
     "WAD",
     font
   );
+  returnCredits = new ButtonText(
+    width / 2 - 420,
+    height / 2 - 260,
+    64,
+    "RETURN",
+    this.font
+  );
   narration = new ButtonImg((width / 6) * 3.5, (height / 4) * 3, 40, 40, ""); //substituir imagem por imagem do botao do narration
   //keybinds settings buttons
   //...
