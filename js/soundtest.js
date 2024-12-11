@@ -44,10 +44,6 @@ function showIllustrations(currentP, x, y, w, h) {
   }
 }
 
-function stopMusic(currentP) {
-  E[currentP].stop();
-}
-
 function resumeMusic(currentP) {
   E[currentP].play();
 }
