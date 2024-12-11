@@ -1,17 +1,16 @@
 class Pointer {
-  constructor(x, y, size, color) {
+  constructor(x, y, size, img) {
     this.x = x;
     this.y = y;
     this.size = size;
-    this.color = color;
+    this.img = img;
     this.lifetime = 255;
     this.speed = 2;
   }
 
   display() {
-    noFill();
-    stroke(this.color, this.lifetime);
-    circle(this.x, this.y, this.size);
+    alpha(this.lifetime);
+    image(this.img, this.x, this.y, this.size, this.size);
   }
 
   move() {
@@ -27,7 +26,7 @@ class Pointer {
   }
 
   intersect(arrowX, arrowY) {
-    return dist(this.x, this.y, arrowX, arrowY) <= this.size - 24;
+    return dist(this.x, this.y, arrowX, arrowY) <= this.size / 2; // Use size / 2 for radius-based detection
   }
 
   interact(arrowX, arrowY) {

@@ -50,27 +50,18 @@ function preloadFont() {
 
 //function to load arrows
 function preloadArrows(center) {
-  arrowL = new Arrow(
-    center - 100,
-    marginBotY,
-    48,
-    color(255, 0, 0),
-    color(200, 0, 0)
-  );
-  arrowUP = new Arrow(
-    center,
-    marginBotY,
-    48,
-    color(0, 255, 0),
-    color(0, 200, 0)
-  );
-  arrowR = new Arrow(
-    center + 100,
-    marginBotY,
-    48,
-    color(0, 0, 255),
-    color(0, 0, 200)
-  );
+  let arrowLImg = loadImage("../assets/icons/arrowL.png");
+  let arrowUPImg = loadImage("../assets/icons/arrowUP.png");
+  let arrowRImg = loadImage("../assets/icons/arrowR.png");
+
+  let arrowLPress = loadImage("../assets/icons/arrowLpress.png");
+  let arrowUPPress = loadImage("../assets/icons/arrowUPpress.png");
+  let arrowRPress = loadImage("../assets/icons/arrowRpress.png");
+
+  arrowL = new Arrow(center - 100, marginBotY, 70, arrowLImg, arrowLPress);
+  arrowUP = new Arrow(center, marginBotY, 70, arrowUPImg, arrowUPPress);
+  arrowR = new Arrow(center + 100, marginBotY, 70, arrowRImg, arrowRPress);
+
   arrows = [arrowL, arrowUP, arrowR];
 }
 
@@ -145,9 +136,9 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  marginBotY = height - 118; //place for arrows
+  marginBotY = height - 152; //place for arrows
   preloadFont(); //preload font
-  preloadArrows((width / 4) * 3); //preload arrows
+  preloadArrows((width / 4) * 3 - 30); //preload arrows
   preloadButtons();
 
   menu = new Menu(font);
@@ -197,29 +188,29 @@ function keyPressed() {
     if (changeKeys) {
       // Using arrow keys
       if (keyCode === LEFT_ARROW) {
-        arrowL.setPressed(false);
+        arrowL.setPressed(true);
         leftArrowPressed = true;
       }
       if (keyCode === UP_ARROW) {
-        arrowUP.setPressed(false);
+        arrowUP.setPressed(true);
         upArrowPressed = true;
       }
       if (keyCode === RIGHT_ARROW) {
-        arrowR.setPressed(false);
+        arrowR.setPressed(true);
         rightArrowPressed = true;
       }
     } else {
       // Using WAD keys
       if (key.toUpperCase() === "A") {
-        arrowL.setPressed(false);
+        arrowL.setPressed(true);
         leftArrowPressed = true;
       }
       if (key.toUpperCase() === "W") {
-        arrowUP.setPressed(false);
+        arrowUP.setPressed(true);
         upArrowPressed = true;
       }
       if (key.toUpperCase() === "D") {
-        arrowR.setPressed(false);
+        arrowR.setPressed(true);
         rightArrowPressed = true;
       }
     }
@@ -231,13 +222,13 @@ function keyReleased() {
   if (!credits && !settings) {
     const changeKeys = menu.getChangeKeys();
     if (changeKeys) {
-      if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
-      if (keyCode === UP_ARROW) arrowUP.setPressed(true);
-      if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
+      if (keyCode === LEFT_ARROW) arrowL.setPressed(false);
+      if (keyCode === UP_ARROW) arrowUP.setPressed(false);
+      if (keyCode === RIGHT_ARROW) arrowR.setPressed(false);
     } else {
-      if (key.toUpperCase() === "A") arrowL.setPressed(true);
-      if (key.toUpperCase() === "W") arrowUP.setPressed(true);
-      if (key.toUpperCase() === "D") arrowR.setPressed(true);
+      if (key.toUpperCase() === "A") arrowL.setPressed(false);
+      if (key.toUpperCase() === "W") arrowUP.setPressed(false);
+      if (key.toUpperCase() === "D") arrowR.setPressed(false);
     }
   }
 }

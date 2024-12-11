@@ -1,21 +1,20 @@
 class Arrow {
-  constructor(x, y, size, color1, color2) {
+  constructor(x, y, size, arrowImg, arrowPress) {
     this.x = x;
     this.y = y;
     this.size = size;
-    this.color1 = color1;
-    this.color2 = color2;
-    this.isPressed = true;
+    this.isPressed = false; // Initial state should typically be false (not pressed)
+    this.arrowImg = arrowImg;
+    this.arrowPress = arrowPress;
   }
 
   display() {
-    if (this.isPressed) {
-      fill(this.color1);
-    } else {
-      fill(this.color2);
-    }
     noStroke();
-    circle(this.x, this.y, this.size);
+    if (this.isPressed) {
+      image(this.arrowPress, this.x, this.y, this.size, this.size); // Show pressed image
+    } else {
+      image(this.arrowImg, this.x, this.y, this.size, this.size); // Show unpressed image
+    }
   }
 
   setPressed(state) {

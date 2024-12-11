@@ -60,32 +60,6 @@ let upArrowPressed = false;
 let rightArrowPressed = false;
 let startExperience = false;
 
-//function to load arrows
-function preloadArrows(center) {
-  arrowL = new Arrow(
-    center - 100,
-    marginBotY,
-    48,
-    color(255, 0, 0),
-    color(200, 0, 0)
-  );
-  arrowUP = new Arrow(
-    center,
-    marginBotY,
-    48,
-    color(0, 255, 0),
-    color(0, 200, 0)
-  );
-  arrowR = new Arrow(
-    center + 100,
-    marginBotY,
-    48,
-    color(0, 0, 255),
-    color(0, 0, 200)
-  );
-
-  arrows = [arrowL, arrowUP, arrowR];
-}
 function preloadButtons() {
   buttondefs = new ButtonImg(
     (width / 10) * 0.2,
@@ -150,6 +124,23 @@ function preloadButtons() {
   buttonsAudio = [volumeDown, volumeUp, narration];
 }
 
+//function to load arrows
+function preloadArrows(center) {
+  let arrowLImg = loadImage("../assets/icons/arrowL.png");
+  let arrowUPImg = loadImage("../assets/icons/arrowUP.png");
+  let arrowRImg = loadImage("../assets/icons/arrowR.png");
+
+  let arrowLPress = loadImage("../assets/icons/arrowLpress.png");
+  let arrowUPPress = loadImage("../assets/icons/arrowUPpress.png");
+  let arrowRPress = loadImage("../assets/icons/arrowRpress.png");
+
+  arrowL = new Arrow(center - 100, marginBotY, 70, arrowLImg, arrowLPress);
+  arrowUP = new Arrow(center, marginBotY, 70, arrowUPImg, arrowUPPress);
+  arrowR = new Arrow(center + 100, marginBotY, 70, arrowRImg, arrowRPress);
+
+  arrows = [arrowL, arrowUP, arrowR];
+}
+
 //create array with pointers
 let pointers = [];
 
@@ -163,20 +154,20 @@ function preloadPointers(center) {
   for (let i = 0; i < 10; i++) {
     let type = int(random(0, 3));
     let randomPos = posX[type];
-    let colorP;
+    let img;
 
     let x = randomPos;
     let y = int(random(-500, 300));
 
     if (type == 0) {
-      colorP = color(255, 0, 0);
+      img = loadImage("../assets/icons/arrowL.png");
     } else if (type == 1) {
-      colorP = color(0, 255, 0);
+      img = loadImage("../assets/icons/arrowUP.png");
     } else if (type == 2) {
-      colorP = color(0, 0, 255);
+      img = loadImage("../assets/icons/arrowR.png");
     }
 
-    pointers.push(new Pointer(x, y, 48, colorP));
+    pointers.push(new Pointer(x, y, 70, img));
   }
 }
 
@@ -195,9 +186,9 @@ function loadPoem() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  marginBotY = height - 118; //place for arrows
-  preloadArrows((width / 4) * 3);
-  preloadPointers((width / 4) * 3);
+  marginBotY = height - 152; //place for arrows
+  preloadArrows((width / 4) * 3 - 30);
+  preloadPointers((width / 4) * 3 - 30);
   preloadButtons();
 
   menu = new Menu(font);
@@ -265,7 +256,7 @@ function draw() {
       } else {
         pointers[i].move(); // Move pointer
         pointers[i].display(); // Display pointer
-        if (pointers[i].y >= height) {
+        if (pointers[i].die() || pointers[i].y >= height + this.size) {
           pointers.splice(i, 1); // Delete pointer if it exceeds the margin
         }
       }
@@ -288,7 +279,7 @@ function draw() {
 //function to handle interaction
 function handleInteraction(centerX, arrow) {
   for (let i = pointers.length - 1; i >= 0; i--) {
-    if (pointers[i].x === centerX && pointers[i].intersect(arrow.x, arrow.y)) {
+    if (pointers[i].intersect(arrow.x, arrow.y)) {
       pointers[i].interact(arrow.x, arrow.y);
     }
   }
@@ -306,34 +297,34 @@ function keyPressed() {
       // Using arrow keys
       if (keyCode === LEFT_ARROW) {
         handleInteraction(centerL, arrowL);
-        arrowL.setPressed(false);
+        arrowL.setPressed(true);
         leftArrowPressed = true;
       }
       if (keyCode === UP_ARROW) {
         handleInteraction(center, arrowUP);
-        arrowUP.setPressed(false);
+        arrowUP.setPressed(true);
         upArrowPressed = true;
       }
       if (keyCode === RIGHT_ARROW) {
         handleInteraction(centerR, arrowR);
-        arrowR.setPressed(false);
+        arrowR.setPressed(true);
         rightArrowPressed = true;
       }
     } else {
       // Using WAD keys
       if (key.toUpperCase() === "A") {
         handleInteraction(centerL, arrowL);
-        arrowL.setPressed(false);
+        arrowL.setPressed(true);
         leftArrowPressed = true;
       }
       if (key.toUpperCase() === "W") {
         handleInteraction(center, arrowUP);
-        arrowUP.setPressed(false);
+        arrowUP.setPressed(true);
         upArrowPressed = true;
       }
       if (key.toUpperCase() === "D") {
         handleInteraction(centerR, arrowR);
-        arrowR.setPressed(false);
+        arrowR.setPressed(true);
         rightArrowPressed = true;
       }
     }
@@ -376,13 +367,13 @@ function keyReleased() {
   if (!credits && !settings) {
     const changeKeys = menu.getChangeKeys();
     if (changeKeys) {
-      if (keyCode === LEFT_ARROW) arrowL.setPressed(true);
-      if (keyCode === UP_ARROW) arrowUP.setPressed(true);
-      if (keyCode === RIGHT_ARROW) arrowR.setPressed(true);
+      if (keyCode === LEFT_ARROW) arrowL.setPressed(false);
+      if (keyCode === UP_ARROW) arrowUP.setPressed(false);
+      if (keyCode === RIGHT_ARROW) arrowR.setPressed(false);
     } else {
-      if (key.toUpperCase() === "A") arrowL.setPressed(true);
-      if (key.toUpperCase() === "W") arrowUP.setPressed(true);
-      if (key.toUpperCase() === "D") arrowR.setPressed(true);
+      if (key.toUpperCase() === "A") arrowL.setPressed(false);
+      if (key.toUpperCase() === "W") arrowUP.setPressed(false);
+      if (key.toUpperCase() === "D") arrowR.setPressed(false);
     }
   }
 }
