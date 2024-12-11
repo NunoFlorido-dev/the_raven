@@ -211,19 +211,31 @@ let pointers = [];
 }
 */
 
+//test function to preload pointers
 function preloadPointers(center) {
-  let posX = [center - 100, center, center + 100];
-  let type = int(random(0, 3)); // Random arrow type
-  let x = posX[type];
-  let img;
+  let posX = [];
+  posX[0] = center - 100;
+  posX[1] = center;
+  posX[2] = center + 100;
 
-  // Choose the arrow image
-  if (type == 0) img = loadImage("../assets/icons/arrowL.png");
-  if (type == 1) img = loadImage("../assets/icons/arrowUP.png");
-  if (type == 2) img = loadImage("../assets/icons/arrowR.png");
+  for (let i = 0; i < 10; i++) {
+    let type = int(random(0, 3));
+    let randomPos = posX[type];
+    let img;
 
-  let pointer = new Pointer(x, -70, 70, img); // Pointer starts above the screen
-  pointers.push(pointer);
+    let x = randomPos;
+    let y = int(random(-500, 300));
+
+    if (type == 0) {
+      img = loadImage("../assets/icons/arrowL.png");
+    } else if (type == 1) {
+      img = loadImage("../assets/icons/arrowUP.png");
+    } else if (type == 2) {
+      img = loadImage("../assets/icons/arrowR.png");
+    }
+
+    pointers.push(new Pointer(x, y, 70, img));
+  }
 }
 
 let syllableArrays = [];
