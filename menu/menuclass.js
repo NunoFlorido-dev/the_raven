@@ -34,13 +34,14 @@ class Menu {
         this.font
       ),
       new ButtonText((width / 6) * 1.6, height / 2, 35, "KEYBINDS", this.font),
+      /*
       new ButtonText(
         (width / 6) * 1.6,
         height / 2 + (height / 2 - height / 3) - 50,
         35,
         "VISUAL",
         this.font
-      ),
+      ),*/
       new ButtonText(
         (width / 6) * 1.6,
         height / 2 + 220,
@@ -176,7 +177,6 @@ class Menu {
 
       // Display each button
       this.buttonsSettings[i].display();
-      print(this.menuSelected);
     }
 
     switch (this.menuSelected) {
@@ -186,9 +186,10 @@ class Menu {
       case 1:
         this.displayKeybindsSettings();
         break;
-      case 2:
+      /* case 2:
         this.displayVisualSettings();
         break;
+        */
     }
   }
 
@@ -202,7 +203,7 @@ class Menu {
     text("AUDIO", (width / 6) * 3.55, (height / 4) * 1.2);
 
     // Volume label and slider
-    fill(0);
+    fill(255);
     textSize(40);
     text("VOLUME", (width / 6) * 3.55, (height / 2) * 0.95);
     rect((width / 3) * 1.35, (height / 4) * 2.1, (width / 4) * 1.15, 20);
@@ -218,12 +219,12 @@ class Menu {
     }
 
     // Narration label
-    fill(0);
+    fill(255);
     text("NARRATION", (width / 6) * 3.55, (height / 3) * 2.1);
 
     // Narration state indicator
     if (this.narrationState) {
-      fill(0);
+      fill(255);
       rect((width / 6) * 3.525, (height / 4) * 3, 20, 20);
     }
   }
@@ -233,17 +234,20 @@ class Menu {
     textSize(85);
     text("KEYBINDS", (width / 6) * 3.55, (height / 4) * 1.2);
 
-    for (let button of this.buttonsKeybinds) {
-      button.display();
+    if (this.changeKeys === false) {
+      fill("#ffeb77");
+    } else {
+      fill(255);
+    }
+    this.buttonsKeybinds[0].display();
+
+    if (this.changeKeys === true) {
+      fill("#ffeb77");
+    } else {
+      fill(255);
     }
 
-    // Display dynamic keybinding information
-  }
-
-  displayVisualSettings() {
-    fill(255);
-    textSize(85);
-    text("VISUAL", (width / 6) * 3.55, (height / 4) * 1.2);
+    this.buttonsKeybinds[1].display();
   }
 
   handleMouseClick(mx, my) {
@@ -271,13 +275,13 @@ class Menu {
 
   handleSettingsClick(mx, my) {
     // Check if "Continue" button is pressed
-    if (this.buttonsSettings[3].isPressed(mx, my)) {
+    if (this.buttonsSettings[2].isPressed(mx, my)) {
       paused = false; // Resume the game
       this.settings = false; // Close settings menu
       return; // Exit after handling the button
     }
 
-    if (this.buttonsSettings[4].isPressed(mx, my)) {
+    if (this.buttonsSettings[3].isPressed(mx, my)) {
       window.location.href = "../index.html"; // Redirect to index.html
     }
 
@@ -286,9 +290,9 @@ class Menu {
       this.menuSelected = 0; // Audio
     } else if (this.buttonsSettings[1].isPressed(mx, my)) {
       this.menuSelected = 1; // Keybinds
-    } else if (this.buttonsSettings[2].isPressed(mx, my)) {
+    } /* else if (this.buttonsSettings[2].isPressed(mx, my)) {
       this.menuSelected = 2; // Visual
-    }
+    }*/
 
     if (this.menuSelected === 0) {
       if (this.buttonsAudio[0].isPressed(mx, my)) {
