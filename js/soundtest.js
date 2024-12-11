@@ -19,7 +19,7 @@ function playMusic(currentP) {
       E[currentP - 1].stop();
     }
     // Play the current track
-    E[currentP].play();
+    E[currentP].loop();
     console.log("Playing track: E" + (currentP + 1));
   } else {
     console.warn("Sound not ready or invalid index: " + currentP);
