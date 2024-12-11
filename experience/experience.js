@@ -62,7 +62,7 @@ let rightArrowPressed = false;
 let startExperience = false;
 
 let fft; // FFT object for beat detection
-let beatThreshold = 230; // Energy threshold for beat detection
+let beatThreshold = 145; // Energy threshold for beat detection
 
 let pointer = [];
 let pointerSpeed = 5; // Default pointer speed
@@ -272,7 +272,7 @@ function setup() {
 
 function detectBeat() {
   let spectrum = fft.analyze();
-  let energy = fft.getEnergy("bass"); // Get energy in the low-mid range for beat detection
+  let energy = fft.getEnergy("lowMid"); // Get energy in the low-mid range for beat detection
 
   if (energy > beatThreshold) {
     return true; // Beat detected
@@ -281,7 +281,7 @@ function detectBeat() {
 }
 
 function spawnPointer() {
-  let pointerCount = 3; // Spawn 3 pointers on each beat
+  let pointerCount = 2; // Spawn 3 pointers on each beat
   for (let i = 0; i < pointerCount; i++) {
     preloadPointers((width / 4) * 3 - 30); // Use preloadPointers to spawn dynamically
   }
