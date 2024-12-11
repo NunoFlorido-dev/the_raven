@@ -62,7 +62,7 @@ let rightArrowPressed = false;
 let startExperience = false;
 
 let fft; // FFT object for beat detection
-let beatThreshold = 145; // Energy threshold for beat detection
+let beatThreshold = 225; // Energy threshold for beat detection
 
 let pointer = [];
 let pointerSpeed = 5; // Default pointer speed
@@ -270,9 +270,12 @@ function setup() {
   playMusic(currentParagraphIndex);
 }
 
+let lastBeatTime = 0; // Time of the last detected beat
+let beatCooldown = 0.3; // Minimum time (in seconds) between beats
+
 function detectBeat() {
   let spectrum = fft.analyze();
-  let energy = fft.getEnergy("lowMid"); // Get energy in the low-mid range for beat detection
+  let energy = fft.getEnergy("bass"); // Get energy in the low-mid range for beat detection
 
   if (energy > beatThreshold) {
     return true; // Beat detected
@@ -280,8 +283,10 @@ function detectBeat() {
   return false;
 }
 
+const MAX_POINTERS = 10; // Maximum number of pointers
+
 function spawnPointer() {
-  let pointerCount = 2; // Spawn 3 pointers on each beat
+  let pointerCount = 3; // Spawn 3 pointers on each beat
   for (let i = 0; i < pointerCount; i++) {
     preloadPointers((width / 4) * 3 - 30); // Use preloadPointers to spawn dynamically
   }
@@ -356,6 +361,7 @@ function draw() {
   } else {
     // Display pause menu and stop other interactions
     menu.display(); // Show menu options
+    stopMusic(currentParagraphIndex);
   }
 
   menu.hover();
@@ -363,28 +369,24 @@ function draw() {
   buttondefs.display(); // Always show the settings button
 
   // Check for beats and spawn pointers
-  if (detectBeat()) {
-    spawnPointer();
-    updatePointerSpeeds(); // Adjust speed dynamically
+}
+
+// Update and display pointers
+for (let i = pointer.length - 1; i >= 0; i--) {
+  let pointer = pointer[i];
+  pointer.y += pointerSpeed; // Move down dynamically
+  pointer.move();
+  pointer.display();
+
+  // Remove pointer if it goes off-screen
+  if (pointer.y > height + pointer.size) {
+    pointer.splice(i, 1);
   }
+}
 
-  // Update and display pointers
-  for (let i = pointer.length - 1; i >= 0; i--) {
-    let pointer = pointer[i];
-    pointer.y += pointerSpeed; // Move down dynamically
-
-    pointer.display();
-
-    // Remove pointer if it goes off-screen
-    if (pointer.y > height + pointer.size) {
-      pointer.splice(i, 1);
-    }
-  }
-
-  // Display arrows
-  for (let i = 0; i < arrows.length; i++) {
-    arrows[i].display();
-  }
+// Display arrows
+for (let i = 0; i < arrows.length; i++) {
+  arrows[i].display();
 }
 
 function handleInteraction(centerX, arrow) {
