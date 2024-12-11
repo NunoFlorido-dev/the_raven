@@ -65,7 +65,7 @@ let fft; // FFT object for beat detection
 let beatThreshold = 225; // Energy threshold for beat detection
 
 let pointer = [];
-let pointerSpeed = 5; // Default pointer speed
+let pointerSpeed = 2; // Default pointer speed
 
 function preloadButtons() {
   buttondefs = new ButtonImg(
@@ -218,13 +218,13 @@ function preloadPointers(center) {
   posX[1] = center;
   posX[2] = center + 100;
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 55; i++) {
     let type = int(random(0, 3));
     let randomPos = posX[type];
     let img;
 
     let x = randomPos;
-    let y = int(random(-500, 300));
+    let y = int(random(-3000, 300));
 
     if (type == 0) {
       img = loadImage("../assets/icons/arrowL.png");
