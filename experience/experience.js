@@ -239,7 +239,7 @@ function displayCurrentParagraph(paragraphIndex) {
   fill(0);
   textFont(font);
   textSize(subtitleSize - 12);
-  text("E" + (paragraphIndex + 1), width - 40, 40);
+  text("E" + (paragraphIndex + 1), width - 50, 47.5);
 }
 
 function draw() {
