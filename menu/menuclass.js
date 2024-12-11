@@ -210,17 +210,18 @@ class Menu {
     fill(255);
     textSize(40);
     text("VOLUME", (width / 6) * 3.55, (height / 2) * 0.95);
-    for (let i=0;i<5;i++){
+    for (let i = 0; i < 5; i++) {
       let temp =
-      (width / 3) * 1.325 + (((width / 4) * 1.15) / 9) * i*1.965 + 20;
-      rect(temp+10, (height / 2) * 1.025, 10, 45);
+        (width / 3) * 1.325 + (((width / 4) * 1.15) / 9) * i * 1.965 + 20;
+      rect(temp + 10, (height / 2) * 1.025, 10, 45);
     }
 
     // Slider thumb
     let sliderX =
       (width / 3) * 1.325 + (((width / 4) * 1.15) / 9) * this.volume * 0.99;
 
-    rect(sliderX+13, (height / 2) * 1.025 +2, 40, 40);
+    fill("#ffeb77");
+    rect(sliderX + 13, (height / 2) * 1.025 + 2, 40, 40);
 
     // Display volume control buttons
     for (let button of this.buttonsAudio) {
